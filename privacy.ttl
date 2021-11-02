@@ -1,0 +1,329 @@
+############
+# author: Kent O'Sullivan
+# purpose: The privacy ontology is a stub designed to allow for the development of an IoT ontology.
+# Last Updated: 02 Nov 21
+############
+
+@prefix privacy: <TBD>.
+
+@prefix rdf:    	<http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd:     	<http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs:    	<http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:		<http://www.w3.org/2002/07/owl#> .
+
+
+#     ____   _          _      ____    ____    _____   ____  
+#    / ___| | |        / \    / ___|  / ___|  | ____| / ___| 
+#   | |     | |       / _ \   \___ \  \___ \  |  _|   \___ \ 
+#   | |___  | |___   / ___ \   ___) |  ___) | | |___   ___) |
+#    \____| |_____| /_/   \_\ |____/  |____/  |_____| |____/ 
+#                                                            
+
+### The Following Seven Classes are derived from Finn's Privacy model. 
+### Ref: Rachel L Finn, David Wright, and Michael Friedewald. “Seven types of privacy”. In: European data protection: coming of age. Springer, 2013, pp. 3– 32.
+
+privacy:PrivacyType
+	rdf:type rdfs:Class ;
+	rdfs:comment "Parent class for the seven types of privacy from Finn's model"^^xsd:string ;
+	rdfs:label "Privacy Type"^^xsd:string .
+
+privacy:PersonalPrivacy
+	rdf:type rdfs:Class ;
+	rdfs:comment "Privacy of the person encompasses the right to keep body functions and body characteristics (such as genetic codes and biometrics) private."^^xsd:string ;
+	rdfs:label "Privacy of the Person"^^xsd:string ;
+	rdfs:subClassOf privacy:PrivacyType.
+
+privacy:BehaviourAndActionPrivacy
+	rdf:type rdfs:Class ;
+	rdfs:comment "The ability to behave in public, semi-public or one’s private space without having actions monitored or controlled by others con- tributes to the development and exercise of autonomy and freedom in thought and action."^^xsd:string ;
+	rdfs:label "Privacy of Behaviour and Action"^^xsd:string ;
+	rdfs:subClassOf privacy:PrivacyType.
+
+privacy:CommunicationPrivacy
+rdf:type rdfs:Class ;
+	rdfs:comment "Privacy of communication aims to avoid the interception of communications, including mail interception, the use of bugs, directional microphones, telephone or wireless communication interception or recording and access to e-mail messages."^^xsd:string ;
+	rdfs:label "Privacy of Communications"^^xsd:string ;
+	rdfs:subClassOf privacy:PrivacyType.
+
+privacy:DataAndImagePrivacy
+rdf:type rdfs:Class ;
+	rdfs:comment "privacy of data and image includes concerns about making sure that individuals’ data is not automatically available to other individuals and organisations and that people can exercise a substantial degree of control over that data and its use"^^xsd:string ;
+	rdfs:label "Privacy of Data and Image"^^xsd:string ;
+	rdfs:subClassOf privacy:PrivacyType.
+
+privacy:ThoughtAndFeelingPrivacy
+rdf:type rdfs:Class ;
+	rdfs:comment "People have a right not to share their thoughts or feelings or to have those thoughts or feeling revealed. Individuals should have the right to think whatever they like. Privacy of thought and feelings can be distinguished from privacy of the person, in the same way that the mind can be distinguished from the body."^^xsd:string ;
+	rdfs:label "Privacy of Thought and Feeling"^^xsd:string ;
+	rdfs:subClassOf privacy:PrivacyType.
+
+privacy:LocationAndSpacePrivacy
+rdf:type rdfs:Class ;
+	rdfs:comment "individuals have the right to move about in public or semi-public space without being identified, tracked or monitored. This conception of privacy also includes a right to solitude and a right to privacy in spaces such as the home, the car or the office."^^xsd:string ;
+	rdfs:label "Privacy of Location and Space"^^xsd:string ;
+	rdfs:subClassOf privacy:PrivacyType.
+
+privacy:AssociationPrivacy
+rdf:type rdfs:Class ;
+	rdfs:comment "Privacy of Association (including group privacy) is concerned with people’s right to associate with whomever they wish, without being monitored. "^^xsd:string ;
+	rdfs:label "Privacy Type"^^xsd:string ;
+	rdfs:subClassOf privacy:PrivacyType.
+
+
+### The following classes relate to the basic sensory dimensions: Who, What, When, Where and Why
+
+privacy:InterrogativeDimensions
+	rdf:type rdfs:Class ;
+	rdfs:comment "Parent class for the five sensory dimensions" ;
+	rdfs:label "Sensory Dimensions".
+
+privacy:Identity
+	rdf:type rdfs:Class ;
+	rdfs:comment "The ability to determine WHO an individual is"^^xsd:string ;
+	rdfs:label "Identity (WHO)" ;
+	rdfs:subClassOf privacy:InterrogativeDimensions.
+
+privacy:Action
+	rdf:type rdfs:Class ;
+	rdfs:comment "The ability to determine WHAT an individual has done"^^xsd:string ;
+	rdfs:label "Action (WHAT)" ;
+	rdfs:subClassOf privacy:InterrogativeDimensions.
+
+privacy:Time 
+	rdf:type rdfs:Class ;
+	rdfs:comment "The ability to determine WHEN something occurs"^^xsd:string ;
+	rdfs:label "Time (WHEN)" ;
+	rdfs:subClassOf privacy:InterrogativeDimensions.
+
+privacy:Location
+	rdf:type rdfs:Class ;
+	rdfs:comment "The ability to determine WHERE an individual is"^^xsd:string ;
+	rdfs:label "Location (WHERE)" ;
+	rdfs:subClassOf privacy:InterrogativeDimensions.
+
+privacy:Motive
+	rdf:type rdfs:Class ;
+	rdfs:comment "The ability to determine WHY an individual does something. Here generally can only be determined if the confidentiality of their communications is breached, as someone telling someone else their motive is the closest that we are likely to get to understanding it"^^xsd:string ;
+	rdfs:label "Motive (WHY)" ;
+	rdfs:subClassOf privacy:InterrogativeDimensions.
+
+
+#    ____    ____     ___    ____    _____   ____    _____   ___   _____   ____  
+#   |  _ \  |  _ \   / _ \  |  _ \  | ____| |  _ \  |_   _| |_ _| | ____| / ___| 
+#   | |_) | | |_) | | | | | | |_) | |  _|   | |_) |   | |    | |  |  _|   \___ \ 
+#   |  __/  |  _ <  | |_| | |  __/  | |___  |  _ <    | |    | |  | |___   ___) |
+#   |_|     |_| \_\  \___/  |_|     |_____| |_| \_\   |_|   |___| |_____| |____/ 
+#    
+
+
+
+
+#    ____    _____   _          _      _____   ___    ___    _   _   ____    _   _   ___   ____    ____  
+#   |  _ \  | ____| | |        / \    |_   _| |_ _|  / _ \  | \ | | / ___|  | | | | |_ _| |  _ \  / ___| 
+#   | |_) | |  _|   | |       / _ \     | |    | |  | | | | |  \| | \___ \  | |_| |  | |  | |_) | \___ \ 
+#   |  _ <  | |___  | |___   / ___ \    | |    | |  | |_| | | |\  |  ___) | |  _  |  | |  |  __/   ___) |
+#   |_| \_\ |_____| |_____| /_/   \_\   |_|   |___|  \___/  |_| \_| |____/  |_| |_| |___| |_|     |____/ 
+#                                   
+
+### The Following Relationships define the link from the interrogative dimension to the privacy type. 
+
+## Relationships about IDENTITY (WHO)
+
+privacy:whoIs
+	rdf:type rdfs:Property ; 
+	rdfs:comment "Identification of an individual impacts Personal Privacy"^^xsd:string ;
+	rdfs:label "Who is the individual impacted" ; 
+	rdfs:domain privacy:Identity ; 
+	rdfs:range privacy:PersonalPrivacy .
+
+privacy:whoDid
+	rdf:type rdfs:Property ; 
+	rdfs:comment "Identification of an individual who undertook an action"^^xsd:string ;
+	rdfs:label "Who took the action" ; 
+	rdfs:domain privacy:Identity ; 
+	rdfs:range privacy:BehaviourAndActionPrivacy .
+
+privacy:whoSaid
+	rdf:type rdfs:Property ; 
+	rdfs:comment "Identification of an individual who was involved in a communication"^^xsd:string ;
+	rdfs:label "Who was involved the communication" ; 
+	rdfs:domain privacy:Identity ; 
+	rdfs:range privacy:CommunicationPrivacy .
+
+privacy:whoData
+	rdf:type rdfs:Property ; 
+	rdfs:comment "Identification of an individual's Data"^^xsd:string ;
+	rdfs:label "Who is the individual this Data is About" ; 
+	rdfs:domain privacy:Identity ; 
+	rdfs:range privacy:DataAndImagePrivacy .
+
+privacy:whoThought
+	rdf:type rdfs:Property ; 
+	rdfs:comment "Identification of an individual who has a thought or feeling"^^xsd:string ;
+	rdfs:label "Who is the individual thinking this" ; 
+	rdfs:domain privacy:Identity ; 
+	rdfs:range privacy:ThoughtAndFeelingPrivacy .
+
+privacy:whoAt
+	rdf:type rdfs:Property ; 
+	rdfs:comment "Identification of an individual at a location."^^xsd:string ;
+	rdfs:label "Who is the individual at the location" ; 
+	rdfs:domain privacy:Identity ; 
+	rdfs:range privacy:LocationAndSpacePrivacy .
+
+privacy:whoWith
+	rdf:type rdfs:Property ; 
+	rdfs:comment "Identification of an individual associating with other(s)"^^xsd:string ;
+	rdfs:label "Who is the individual associating with" ; 
+	rdfs:domain privacy:Identity ; 
+	rdfs:range privacy:AssociationPrivacy .
+
+## Relationships about Action (WHAT)
+
+#No PersonalPrivacy - Action relationship defined ("What is" seems a bit existential)
+
+privacy:whatDid
+	rdf:type rdfs:Property ; 
+	rdfs:comment "An action committed"^^xsd:string ;
+	rdfs:label "What is the Action Committed" ; 
+	rdfs:domain privacy:Action ; 
+	rdfs:range privacy:BehaviourAndActionPrivacy .
+
+#No Action - Communication relationship defined. The fact a communication occured is assumed. Content of a message covered in "whySaid"
+
+privacy:whatData
+	rdf:type rdfs:Property ; 
+	rdfs:comment "An Action's associated data"^^xsd:string ;
+	rdfs:label "What is the data for the Action" ; 
+	rdfs:domain privacy:Action ; 
+	rdfs:range privacy:DataAndImagePrivacy .
+
+privacy:whatThought
+	rdf:type rdfs:Property ; 
+	rdfs:comment "The thought/feeling implied by an action (e.g. Punching someone indicates anger"^^xsd:string ;
+	rdfs:label "What is the Action's Sentiment" ; 
+	rdfs:domain privacy:Action ; 
+	rdfs:range privacy:ThoughtAndFeelingPrivacy .
+
+#No location / Space and Action relationship defined ("What At" is redundant to "where At")
+
+#No association and Action relationship defined ("What With" is just the conjunction of "WhoWith" and "WhatDid")
+
+
+##Relationships about time (WHEN): 
+
+privacy:whenIs
+	rdf:type rdfs:Property ; 
+	rdfs:comment "The time an individual is identified"^^xsd:string ;
+	rdfs:label "When is an individual identified" ; 
+	rdfs:domain privacy:Time ; 
+	rdfs:range privacy:PersonalPrivacy .
+
+privacy:whenDid
+	rdf:type rdfs:Property ; 
+	rdfs:comment "The time an individual completed an action"^^xsd:string ;
+	rdfs:label "When is an individual acted" ; 
+	rdfs:domain privacy:Time ; 
+	rdfs:range privacy:BehaviourAndActionPrivacy .
+
+privacy:whenSaid
+	rdf:type rdfs:Property ; 
+	rdfs:comment "The time an individual sent a communication"^^xsd:string ;
+	rdfs:label "When is an individual communicated" ; 
+	rdfs:domain privacy:Time ; 
+	rdfs:range privacy:CommunicationPrivacy .
+
+privacy:whenData
+	rdf:type rdfs:Property ; 
+	rdfs:comment "The time associated with collected Data"^^xsd:string ;
+	rdfs:label "When is this data from" ; 
+	rdfs:domain privacy:Time ; 
+	rdfs:range privacy:DataAndImagePrivacy .
+
+privacy:whenThought
+	rdf:type rdfs:Property ; 
+	rdfs:comment "The time an individual had a thought (note: likely inferred from message or conversation)."^^xsd:string ;
+	rdfs:label "When is an individual having a thought or feeling" ; 
+	rdfs:domain privacy:Time ; 
+	rdfs:range privacy:ThoughtAndFeelingPrivacy .
+
+privacy:whenAt
+	rdf:type rdfs:Property ; 
+	rdfs:comment "The time a location is at a location"^^xsd:string ;
+	rdfs:label "When is an individual is at a location" ; 
+	rdfs:domain privacy:Time ; 
+	rdfs:range privacy:LocationAndSpacePrivacy .
+
+privacy:whenWith
+	rdf:type rdfs:Property ; 
+	rdfs:comment "The time an individual is associated with another"^^xsd:string ;
+	rdfs:label "When is an individual is Associated with another" ; 
+	rdfs:domain privacy:Time ; 
+	rdfs:range privacy:AssociationPrivacy .
+
+##Relationships about Location (WHERE):
+
+privacy:whereIs
+	rdf:type rdfs:Property ; 
+	rdfs:comment "The Location an individual is identified"^^xsd:string ;
+	rdfs:label "Where is an individual identified" ; 
+	rdfs:domain privacy:Location ; 
+	rdfs:range privacy:PersonalPrivacy .
+
+privacy:whereDid
+	rdf:type rdfs:Property ; 
+	rdfs:comment "The Location an individual committed an act"^^xsd:string ;
+	rdfs:label "Where did an action occur" ; 
+	rdfs:domain privacy:Location ; 
+	rdfs:range privacy:BehaviourAndActionPrivacy .
+
+
+privacy:whereSaid
+	rdf:type rdfs:Property ; 
+	rdfs:comment "The Location an individual was involved in a communication"^^xsd:string ;
+	rdfs:label "Where did an individual communicate" ; 
+	rdfs:domain privacy:Location ; 
+	rdfs:range privacy:CommunicationPrivacy .
+
+
+#no Location and Data&Image relationship defined. Possible to derive location from priori data but will capture that in the other areas. 
+
+#no Location and thought/feeling relationship defined. Pointless to know where someone was thinking something from a privacy perpsective. 
+
+#No location to location privacy relationship defined. Self-Defining. 
+
+privacy:whereWith
+	rdf:type rdfs:Property ; 
+	rdfs:comment "The Location an individual associates with another"^^xsd:string ;
+	rdfs:label "Where is an individual Associating" ; 
+	rdfs:domain privacy:Location ; 
+	rdfs:range privacy:AssociationPrivacy .
+
+
+## Relationships about motives. 
+
+#No Motive - Personal Privacy relationship defined. "Cogito Ergo Sum".
+
+#No Motive - behaviour relationship defined. Extremely difficult to infer motive as an observer. 
+
+privacy:whySaid
+	rdf:type rdfs:Property ; 
+	rdfs:comment "Motive of an individual is derived from their communication"^^xsd:string ;
+	rdfs:label "Why are they thinking / feeling based on what they communicated" ; 
+	rdfs:domain privacy:Time ; 
+	rdfs:range privacy:CommunicationPrivacy .
+
+
+#no Motive - Data relationship defined. Difficult to infer motive from even aggregated data (Some classification models may be exceptions to this)
+
+privacy:whyThought
+	rdf:type rdfs:Property ; 
+	rdfs:comment "The motive of an individual based on converation or observation"^^xsd:string ;
+	rdfs:label "Why is an individual doing something" ; 
+	rdfs:domain privacy:Time ; 
+	rdfs:range privacy:ThoughtAndFeelingPrivacy .
+
+
+#no Motive - location relationship defined. Difficult to infer WHY someone is somehwere just from the fact they are there. 
+
+#no Motive-Association relationship defined. Difficult to infer WHY someone is a member of a group without them telling you. 
