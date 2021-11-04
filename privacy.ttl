@@ -66,7 +66,7 @@ rdf:type rdfs:Class ;
 privacy:AssociationPrivacy
 rdf:type rdfs:Class ;
 	rdfs:comment "Privacy of Association (including group privacy) is concerned with people’s right to associate with whomever they wish, without being monitored. "^^xsd:string ;
-	rdfs:label "Privacy Type"^^xsd:string ;
+	rdfs:label "Privacy of Association"^^xsd:string ;
 	rdfs:subClassOf privacy:PrivacyType.
 
 
@@ -310,7 +310,7 @@ privacy:whySaid
 	rdf:type rdfs:Property ; 
 	rdfs:comment "Motive of an individual is derived from their communication"^^xsd:string ;
 	rdfs:label "Why are they thinking / feeling based on what they communicated" ; 
-	rdfs:domain privacy:Time ; 
+	rdfs:domain privacy:Motive ; 
 	rdfs:range privacy:CommunicationPrivacy .
 
 
@@ -320,7 +320,7 @@ privacy:whyThought
 	rdf:type rdfs:Property ; 
 	rdfs:comment "The motive of an individual based on converation or observation"^^xsd:string ;
 	rdfs:label "Why is an individual doing something" ; 
-	rdfs:domain privacy:Time ; 
+	rdfs:domain privacy:Motive ; 
 	rdfs:range privacy:ThoughtAndFeelingPrivacy .
 
 
