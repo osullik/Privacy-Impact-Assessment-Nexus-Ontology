@@ -28,3 +28,21 @@ The privacy namespace consists of two key entity groups: PrivacyTypes and Interr
 | Location and space 	| whoAt 		 | 				 | whenAt 	   | 				  | 			 |
 | Association 			| whoWith		 | 				 | whenWith    | whereWith 		  | 			 |
 
+
+The File senses.ttl is an RDF Trutle syntax file that defines the sense namespace. 
+The sense namespace consists of a "Collection Vector" entity group and a a number of relationships to the 
+privacy interrogatives. 
+
+## COLLECTION VECTORS
+- These are derived from the privacy interrogatives defined in privacy.ttl, associating them with the type of information that feeds that interrogative. They are: 
+
+|              			| Identity (WHO) | Action (WHAT) | Time (WHEN) | Location (WHERE) | Motive (WHY) |
+|-----------------------|----------------|---------------|-------------|------------------|--------------|
+| Sight	        	    | seesWho 		 | seesWhat		 | 			   | 				  |				 |
+| Sound	        	    | hearsWho 		 | hearsWhat	 | 			   | 				  |				 |
+| Time	        	    | 		 		 |				 | occursWhen  | 				  |				 |
+| Location        	    | 		 		 |				 | 			   | locatesWhere	  |				 |
+
+
+## THE DEVICE ENTITY
+- The Device entity is designed as a 'PortKey' (ontology bridge). It serves as the interface point for the abstraction layer of the privacy impact assessment distinct from the physical network or device. In this manner, a the extensibility of this ontology to others is maximised. 
