@@ -1,0 +1,149 @@
+############
+# author: Kent O'Sullivan
+# purpose: The senses ontology is a stub designed to allow for the development of an IoT ontology.
+# Last Updated: 25 Jan 22
+############
+
+@prefix sense: <https://github.com/osullik/IoT-Privacy/blob/main/senses.ttl>.
+@prefix privacy: <https://github.com/osullik/IoT-Privacy/blob/main/privacy.ttl>.
+
+@prefix rdf:    	<http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd:     	<http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs:    	<http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:		<http://www.w3.org/2002/07/owl#> .
+
+
+#     ____   _          _      ____    ____    _____   ____  
+#    / ___| | |        / \    / ___|  / ___|  | ____| / ___| 
+#   | |     | |       / _ \   \___ \  \___ \  |  _|   \___ \ 
+#   | |___  | |___   / ___ \   ___) |  ___) | | |___   ___) |
+#    \____| |_____| /_/   \_\ |____/  |____/  |_____| |____/ 
+#                                                            
+
+## The Following Classes are derived from the sensory world, and linked observations. 
+## Senses with no application (Smell, Taste, Touch are excluded)
+## Biometrics are encomapassed in their respective senses. E.g. Fingerprints are "seen", voiceprints are "heard"
+
+###Parent Classes
+
+sense:Device #temporary entity until the appropriate IoT ontology can be linked in #FUTUREWORK
+	rdf:type rdfs:Class ; 
+	rdfs:comment "Represents the device collecting the Sights, Sounds, Time and/or Location"^^xsd:string ;
+	rdfs:label "Device"^^xsd:string .
+
+sense:CollectionVector  
+	rdf:type rdfs:Class ;
+	rdfs:comment "Encompasses all vectors that can be combined to compromise privacy"^^xsd:string ;
+	rdfs:label "Collection Vectors"^^xsd:string .
+
+###Sensor Subclasses
+
+sense:Sight
+	rdf:type rdfs:Class ;
+	rdfs:comment "Encompasses all things that can be seen"^^xsd:string ;
+	rdfs:label "Sight"^^xsd:string ;
+	rdfs:subClassOf sense:CollectionVector.
+
+sense:Sound
+	rdf:type rdfs:Class ;
+	rdfs:comment "Encompasses all things that can be heard"^^xsd:string ;
+	rdfs:label "Sound"^^xsd:string ;
+	rdfs:subClassOf sense:CollectionVector.
+
+sense:Time
+	rdf:type rdfs:Class ;
+	rdfs:comment "Encompasses all things that can be temporally measured"^^xsd:string ;
+	rdfs:label "Time"^^xsd:string ;
+	rdfs:subClassOf sense:CollectionVector.
+
+sense:Location
+	rdf:type rdfs:Class ;
+	rdfs:comment "Encompasses all things that can be located"^^xsd:string ;
+	rdfs:label "Location"^^xsd:string ;
+	rdfs:subClassOf sense:CollectionVector.
+
+### Sensory Subclasses
+
+sense:Pictures
+	rdf:type rdfs:Class ;
+	rdfs:comment "Things that are seen as objects or entites"^^xsd:string ;
+	rdfs:label "Pictures"^^xsd:string ;
+	rdfs:subClassOf sense:Sight.
+
+sense:Words
+	rdf:type rdfs:Class ;
+	rdfs:comment "Things that are seen as words or language"^^xsd:string ;
+	rdfs:label "Words"^^xsd:string ;
+	rdfs:subClassOf sense:Sight.
+
+
+#    ____    ____     ___    ____    _____   ____    _____   ___   _____   ____  
+#   |  _ \  |  _ \   / _ \  |  _ \  | ____| |  _ \  |_   _| |_ _| | ____| / ___| 
+#   | |_) | | |_) | | | | | | |_) | |  _|   | |_) |   | |    | |  |  _|   \___ \ 
+#   |  __/  |  _ <  | |_| | |  __/  | |___  |  _ <    | |    | |  | |___   ___) |
+#   |_|     |_| \_\  \___/  |_|     |_____| |_| \_\   |_|   |___| |_____| |____/ 
+#    
+
+
+
+
+#    ____    _____   _          _      _____   ___    ___    _   _   ____    _   _   ___   ____    ____  
+#   |  _ \  | ____| | |        / \    |_   _| |_ _|  / _ \  | \ | | / ___|  | | | | |_ _| |  _ \  / ___| 
+#   | |_) | |  _|   | |       / _ \     | |    | |  | | | | |  \| | \___ \  | |_| |  | |  | |_) | \___ \ 
+#   |  _ <  | |___  | |___   / ___ \    | |    | |  | |_| | | |\  |  ___) | |  _  |  | |  |  __/   ___) |
+#   |_| \_\ |_____| |_____| /_/   \_\   |_|   |___|  \___/  |_| \_| |____/  |_| |_| |___| |_|     |____/ 
+#                                   
+
+#Internal Relations
+
+sense:collects
+	rdf:type rdfs:Property;
+	rdfs:comment"The relationship between a device and its sensors"^^xsd:string ; 
+	rdfs:label"collects"^^xsd:string ;
+	rdfs:domain sense:Device ; 
+	rdfs:range sense:CollectionVector .
+
+# Inter-namespace Relations (From Senses to Privacy)
+
+sense:seesWho 
+	rdf:type rdfs:Property;
+	rdfs:comment"The relationship between a seeing device and the identity it sees"^^xsd:string ; 
+	rdfs:label"Who the sight sensor sees"^^xsd:string ;
+	rdfs:domain sense:Sight ; 
+	rdfs:range privacy:Identity .	
+
+sense:seesWhat
+	rdf:type rdfs:Property;
+	rdfs:comment"The relationship between a seeing device and the action it sees"^^xsd:string ; 
+	rdfs:label"What the sight sensor sees"^^xsd:string ;
+	rdfs:domain sense:Sight ; 
+	rdfs:range privacy:Action .	
+
+sense:hearsWho 
+	rdf:type rdfs:Property;
+	rdfs:comment"The relationship between a hearing device and the identity it hears"^^xsd:string ; 
+	rdfs:label"Who the sound sensor hears"^^xsd:string ;
+	rdfs:domain sense:Sound ; 
+	rdfs:range privacy:Identity .	
+
+sense:hearsWhat
+	rdf:type rdfs:Property;
+	rdfs:comment"The relationship between a hearing device and the action it hears"^^xsd:string ; 
+	rdfs:label"What the sound sensor hears"^^xsd:string ;
+	rdfs:domain sense:Sound ; 
+	rdfs:range privacy:Action .	
+
+sense:locatesWhere
+	rdf:type rdfs:Property;
+	rdfs:comment"The relatinship between a locating sensor and the location it records"^^xsd:string ; 
+	rdfs:label"Where the locator locates"^^xsd:string ;
+	rdfs:domain sense:Location ; 
+	rdfs:range privacy:Location .	
+
+sense:occursWhen
+	rdf:type rdfs:Property;
+	rdfs:comment"The relatinship between a timing sensor and the time it records"^^xsd:string ; 
+	rdfs:label"When the vector is collected"^^xsd:string ;
+	rdfs:domain sense:Time ; 
+	rdfs:range privacy:Time .	
+
