@@ -1,14 +1,46 @@
-#Competency Question 1 - WHAT are the different types of privacy
+## 1. Privacy Namespace
+
+#Competency Question 1.1 - WHAT are the different types of privacy
 SELECT ?PrivType WHERE {?PrivType rdfs:subClassOf privacy:PrivacyType}
 
-#Competency Question 2 - WHAT are the different interrogatives?
+#Competency Question 1.2 - WHAT are the different interrogatives?
 SELECT ?Interrogatives WHERE {?Interrogatives rdfs:subClassOf privacy:InterrogativeDimensions}
 
-#Competency Question 3 - What are all the unique relationships between Privacy Types and Interrogatives? 
-SELECT ?Type ?Relationship ?Interrogative WHERE {?Relationship rdfs:range ?Type . ?Relationship rdfs:domain ?Interrogative}
+#Competency Question 1.3 - WHAT are all the unique relationships between Privacy Types and Interrogatives? 
+SELECT ?Type ?Relationship ?Interrogative WHERE {?Relationship rdfs:range ?Type . ?Relationship rdfs:domain ?Interrogative
+FILTER(isURI(?Relationship) && STRSTARTS(STR(?Relationship), STR(privacy:)))} #filter gets rid of non-privacy namespaces
 
-#Competency Question 4 - For a given Interrogative, what are the related privacy types? 
+#Competency Question 1.4 - For a given Interrogative, WHAT are the related privacy types? 
 SELECT ?Relationship ?Type WHERE {?Relationship rdfs:domain privacy:Identity . ?Relationship rdfs:range ?Type}
 
-#Competency Question 5 - For a given Privacy Type, what are the related Interrogatives? 
+#Competency Question 1.5 - For a given Privacy Type, WHAT are the related Interrogatives? 
 SELECT ?Relationship ?Interrogative WHERE {?Relationship rdfs:range privacy:PersonalPrivacy . ?Relationship rdfs:domain ?Interrogative}
+
+##2. Sense Namespace
+
+#Competency Question 2.1 - WHAT are the collection vectors?
+
+SELECT ?Vector WHERE {?Vector rdfs:subClassOf sense:CollectionVector}
+
+#Competencey Question 2.2 - WHAT are the collection vectors of a given device? 
+
+SELECT ?Vector WHERE {?Device sense:collects ?Vector} #not proven until instantiated with a KB specifying a given device. 
+
+#Competency Question 2.3 - For a given COLLECTION VECTOR, WHICH DEVICES are capable of collecting it? 
+
+SELECT ?Device WHERE {?Device sense:collects ?Vector} # Not proven until instantiated with a KB specifying a given vector. 
+
+##3.  Portkey (ontology bridge) Relationships:
+
+# Competency Question 3.1 - WHAT is the Sensory Dimension assosciated with a given Collection Vector
+
+SELECT ?Vector ?Rel ?Dim  WHERE {?Rel rdfs:domain sense:CollectionVector . 
+                                 ?Rel rdfs:range privacy:InterrogativeDimensions} #Returns only the Relationships
+
+SELECT ?Vector ?Rel ?Dim  WHERE {?Rel rdfs:domain ?Vector . 
+                                 ?Rel rdfs:range ?Dim
+                                 FILTER(isURI(?Rel) && STRSTARTS(STR(?Rel), STR(sense:)))
+                                 FILTER(isURI(?Vector) && STRSTARTS(STR(?Vector), STR(sense:)))
+                                 FILTER(isURI(?Dim) && STRSTARTS(STR(?Dim), STR(privacy:)))
+                                 } #Returns all parent & Child Classes (doubles up)
+                        

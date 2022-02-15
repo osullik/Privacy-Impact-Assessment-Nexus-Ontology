@@ -46,3 +46,7 @@ privacy interrogatives.
 
 ## THE DEVICE ENTITY
 - The Device entity is designed as a 'PortKey' (ontology bridge). It serves as the interface point for the abstraction layer of the privacy impact assessment distinct from the physical network or device. In this manner, a the extensibility of this ontology to others is maximised. 
+
+## Datasets
+
+-The Datasets folder contains data taken from **Marche, Claudio, et al. "How to exploit the Social Internet of Things: Query Generation Model and Device Profiles’ Dataset". Computer Networks (2020): 107248.**. It is available at: https://www.social-iot.org/index.php?p=downloads in its original format. Copies are kept here for data posterity. 
