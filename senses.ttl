@@ -84,8 +84,12 @@ sense:Words
 #   |_|     |_| \_\  \___/  |_|     |_____| |_| \_\   |_|   |___| |_____| |____/ 
 #    
 
-#The following properties relate to the 'device' concept. 
+#The following properties relate to the 'device' concept & are derived from Marche, Pilloni & Nitti's "How to exploit the Social Internet
+#of things: Query Generation Model and Deveice Profiles' Dataset" paper of 2020. Link available in Readme.  
 
+# On instantiation, "hasCamera" is set to TRUE where the "People Presence" service is associated with a device_type in its object_profile.
+# NOTE: As cameras are not explicitly called out by the dataset "people present" will be used as a proxy, though it is
+# acknowledged that this is likely to be derived from other mechanisms than the camera. 
 sense:hasCamera
 	rdf:type rdf:Property ;
 	rdfs:comment "Reflects whether or not a device has a camera"^^xsd:string ;
@@ -93,6 +97,7 @@ sense:hasCamera
 	rdfs:domain sense:Device ;
 	rdfs:range xsd:boolean . 
 
+# On instantiation "hasMicrophone" is set to TRUE where the "Environment" service is associated with a device_type in its object_profile. 
 sense:hasMicrophone
 	rdf:type rdf:Property ;
 	rdfs:comment "Reflects whether or not a device has a microphone"^^xsd:string ;
@@ -100,6 +105,7 @@ sense:hasMicrophone
 	rdfs:domain sense:Device ;
 	rdfs:range xsd:boolean . 
 
+# On Instantiation "hasClock" is set to TRUE where the "datetime" service is associated with a device_type in its object_profile	
 sense:hasClock
 	rdf:type rdf:Property ;
 	rdfs:comment "Reflects whether or not a device has a clock (or other timing device)"^^xsd:string ;
@@ -107,12 +113,27 @@ sense:hasClock
 	rdfs:domain sense:Device ;
 	rdfs:range xsd:boolean . 
 
+# On Instantiation "hasLocator" is set to TRUE where the "location" service is associated with a device_type in its object profile. 
 sense:hasLocator
 	rdf:type rdf:Property ;
 	rdfs:comment "Reflects whether or not a device has a location tool (e.g. GNSS Reciever)"^^xsd:string ;
 	rdfs:label "Device Locator"^^xsd:string ;
 	rdfs:domain sense:Device ;
 	rdfs:range xsd:boolean . 
+
+sense:deviceUser
+	rdf:type rdf:Property ;
+	rdfs:comment "Identifies the user of a unique device"^^xsd:string ;	
+	rdfs:label "Device User"^^xsd:string ;
+	rdfs:domain sense:Device ;
+	rdfs:range xsd:string .
+
+sense:deviceType
+	rdf:type rdf:Property ;
+	rdfs:comment "Indicates the type of IoT device"^^xsd:string ;
+	rdfs:label "Device Type"^^xsd:string ; 
+	rdfs:domain sense:Device ;
+	rdfs:range xsd:string . 
 
 #    ____    _____   _          _      _____   ___    ___    _   _   ____    _   _   ___   ____    ____  
 #   |  _ \  | ____| | |        / \    |_   _| |_ _|  / _ \  | \ | | / ___|  | | | | |_ _| |  _ \  / ___| 
