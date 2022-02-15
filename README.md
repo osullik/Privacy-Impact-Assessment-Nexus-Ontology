@@ -44,8 +44,21 @@ privacy interrogatives.
 | Location        	    | 		 		 |				 | 			   | locatesWhere	  |				 |
 
 
+
 ## THE DEVICE ENTITY
 - The Device entity is designed as a 'PortKey' (ontology bridge). It serves as the interface point for the abstraction layer of the privacy impact assessment distinct from the physical network or device. In this manner, a the extensibility of this ontology to others is maximised. 
+
+- The instantiation of the Device Properties in the Knowledge Base is derived from a mix of the *"objects_description"*, *"objectsProfile"* and *"Service and Application Description"* documents within the relevant datasets (https://github.com/osullik/IoT-Privacy/tree/main/Datasets). The definitions of numerical codes to their services is in the *"Service and Application Description"* pdf, but is summarised here: 
+
+| Collection Vector 	| NumberCode	 |	   Definition	 | 
+|-----------------------|----------------|-------------------|
+| Sight	        	    | 		4 		 | "People Presence" |
+| Sound	        	    | 		5 		 | "Environment"	 |
+| Time	        	    | 		2 		 | "DateTime"		 |
+| Location	        	| 		1 		 | "Location"		 |
+
+While there are 18 defined classes of "service" in the dataset, these have been determined to have the most significant "first-order" impact on privacy. That is, a first-order method of deriving the time (a clock) is included, but a second-order method (e.g. combining location + temprature & external data) has not been accounted for at this time and should be examined in future work. 
+
 
 ## Datasets
 
