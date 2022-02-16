@@ -4,8 +4,9 @@
 # Last Updated: 25 Jan 22
 ############
 
-@prefix sense: <https://github.com/osullik/IoT-Privacy/blob/main/senses.ttl>.
 @prefix privacy: <https://github.com/osullik/IoT-Privacy/blob/main/privacy.ttl>.
+@prefix sense: <https://github.com/osullik/IoT-Privacy/blob/main/senses.ttl>.
+@prefix social_IOT_KB: <https://github.com/osullik/IoT-Privacy/blob/main/social_IOT_KB.ttl>.
 
 @prefix rdf:    	<http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix xsd:     	<http://www.w3.org/2001/XMLSchema#> .
@@ -110,6 +111,7 @@ sense:deviceType
 	rdfs:domain sense:Device ;
 	rdfs:range xsd:string . 
 
+#on instantiation "hasCamera" is set to TRUE when the "peoplePresent" serivce is associated with a device. 
 sense:hasCamera
 	rdf:type rdf:Property ;
 	rdfs:comment "Reflects whether or not a device has a camera"^^xsd:string ;
