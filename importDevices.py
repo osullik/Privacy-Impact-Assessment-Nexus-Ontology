@@ -1,4 +1,5 @@
-import csv, stardog, os.path 
+import csv, stardog, os.path, json, pandas as pd, io 
+from rdflib import Graph
 
 #details for Stardog DB Connection
 connection_details = {
@@ -106,23 +107,36 @@ def CreateDeviceDict():
 #	print(entry)
 
 def createKBTriples(deviceDict):
+	#This function is designed to turn the data held in the deviceDict dictionary into a series of RDF triples to be populated into a knowledgebase. 
+	#It accetps an input of a dictionary of dictionaries describing each device in the Social IoT. 
+	#It returns no value, and works as a frameword for other functions to achieve the data manipulation. 
+	
+	#Variables to hold each of the device descriptors. 
 	deviceID = ""
 	deviceType = ""
 	userID = ""
 	servicesList = []
+
+	#Steps through each dictionary item & extracts the relevant values. From there, it pushes them into a function
+	#that transforms them to a series of RDF triples, and then feeds those triples into a process that creates the knowledgevase in a Turtle file.
+	firstTimeFlag = True # used by createTTLFile to clear out the old social_IOT_KB file if being rerun for the first time. 
 	for key, value in deviceDict.items():
 		deviceID = key
 		deviceType = value["deviceType"]
 		userID = value["userID"]
 		servicesList = value["deviceServices"] 
 		deviceTriples = makeRDFTriple(deviceID, deviceType, userID, servicesList)
-		#print(deviceTriples)
-		createTTLFile(deviceTriples)
+		createTTLFile(deviceTriples, firstTimeFlag)
+		firstTimeFlag = False
 
 
 
 
 def makeRDFTriple(DeviceID, DeviceType, UserID, ServicesList):
+	#This function is designed to create RDF triples out of various string and list values derived from the Social IoT dataset. 
+	#It accepts string inputs of DeviceID, DeviceTye & userID, and a list input of Services List. 
+	#It returns a formatted string that defines the properties of a SINGLE device from the Social IOT dataset. 
+
 	''' Format to get to is: 
 		Social_IOT_KB:Device(<DeviceID>)
 			rdf:type: sense:Device ;
@@ -161,8 +175,7 @@ def makeRDFTriple(DeviceID, DeviceType, UserID, ServicesList):
 	else:
 		locatorBool = "sense:hasLocator \"false\"^^xsd:boolean ."
 
-	#print("RDFTriple is: ")
-
+	#Formats the string into what is expected of an RDF parser (in this case, Stardog's)
 	returnString = (
 		DeviceString+"\n"
 		"\t"+typeString+"\n"
@@ -176,66 +189,165 @@ def makeRDFTriple(DeviceID, DeviceType, UserID, ServicesList):
 	return(returnString)
 
 
-'''def createSocial_IOT_KB(connection_details, database_name):
+def createSocial_IOT_KB(connection_details, database_name):
+	#This function is designed to create the Social IOT Knowledgebase from available TTL Files. 
+	#It accepts as an input the connection details and database name
+	#It assumes that the .ttl files are contianed in the same directory as the python script
+	#It returns no value, but does create & populate a database on the stardog server detailed in "connection_details"
 
 	#Create the database from scratch, or if an older version exists, drop it. 
 	with stardog.Admin(**connection_details) as admin:
-	    if database_name in [db.name for db in admin.databases()]:
-	        admin.database(database_name).drop()
-	    db = admin.new_database(database_name)
+		if database_name in [db.name for db in admin.databases()]:
+			admin.database(database_name).drop()
+		db = admin.new_database(database_name)
 
+
+	#define the connection that data will be passed across
 	conn = stardog.Connection(database_name, **connection_details)
 
 
-	#Start a connection to the database
+	#Start a connection to the database defined in the line above
 	conn.begin()
 
 
-	#Add the content
+	#Add the content (here the two schema files and the Social IOT Knowledgebase.)
+	conn.add_namespace("sense:", "https://github.com/osullik/IoT-Privacy/blob/main/senses.ttl")
+	conn.add_namespace("privacy:", "https://github.com/osullik/IoT-Privacy/blob/main/privacy.ttl")
+	conn.add_namespace("social_IOT_KB:", "https://github.com/osullik/IoT-Privacy/blob/main/social_IOT_KB.ttl")
+	conn.add(stardog.content.File('privacy.ttl'))
+	conn.add(stardog.content.File('senses.ttl'))
 	conn.add(stardog.content.File('social_IOT_KB.ttl'))
-
-	#Commit the added content
-	conn.commit()'''
-
-def instantiateKB(deviceTriples, connection_details, database_name):
-
-	conn = stardog.Connection(database_name, **connection_details)
-
-
-	#Start a connection to the database
-	conn.begin()
-
-
-	#Add the content
-	print(deviceTriples)
-	conn.add(stardog.content.Raw(deviceTriples,'text/turtle'))
 
 	#Commit the added content
 	conn.commit()
 
-def createTTLFile(deviceTriples):
-	if os.path.isfile("./social_IOT_KB.ttl") == True:
-		with open("social_IOT_KB.ttl", "a") as KB_Output:
-			KB_Output.write(deviceTriples+"\n")
+def createTTLFile(deviceTriples, firstTimeFlag):
+	if firstTimeFlag == True:
+		if os.path.isfile("./social_IOT_KB.ttl") == True:
+			os.remove("./social_IOT_KB.ttl")
+		else:
+			pass 
 	else:
-		with open("social_IOT_KB.ttl", "w") as KB_Output:
-			KB_Output.write("#RDF Triples generated automatically from the Social IOT Dataset"+"\n\n"
-							"@prefix privacy: <https://github.com/osullik/IoT-Privacy/blob/main/privacy.ttl>."+"\n"
-							"@prefix sense: <https://github.com/osullik/IoT-Privacy/blob/main/senses.ttl>."+"\n"
-							"@prefix social_IOT_KB: <https://github.com/osullik/IoT-Privacy/blob/main/social_IOT_KB.ttl>."+"\n"
-							"@prefix rdf:    	<http://www.w3.org/1999/02/22-rdf-syntax-ns#> ."+"\n"
-							"@prefix xsd:     	<http://www.w3.org/2001/XMLSchema#> ."+"\n"
-							"@prefix rdfs:    	<http://www.w3.org/2000/01/rdf-schema#> ."+"\n"
-							"@prefix owl:		<http://www.w3.org/2002/07/owl#> ."+"\n\n")
-			KB_Output.write(deviceTriples+"\n")
+
+		if os.path.isfile("./social_IOT_KB.ttl") == True:
+			with open("social_IOT_KB.ttl", "a") as KB_Output:
+				KB_Output.write(deviceTriples+"\n")
+		else:
+			with open("social_IOT_KB.ttl", "w") as KB_Output:
+				KB_Output.write("#RDF Triples generated automatically from the Social IOT Dataset"+"\n\n"
+								"@prefix privacy: <https://github.com/osullik/IoT-Privacy/blob/main/privacy.ttl>."+"\n"
+								"@prefix sense: <https://github.com/osullik/IoT-Privacy/blob/main/senses.ttl>."+"\n"
+								"@prefix social_IOT_KB: <https://github.com/osullik/IoT-Privacy/blob/main/social_IOT_KB.ttl>."+"\n"
+								"@prefix rdf:    	<http://www.w3.org/1999/02/22-rdf-syntax-ns#> ."+"\n"
+								"@prefix xsd:     	<http://www.w3.org/2001/XMLSchema#> ."+"\n"
+								"@prefix rdfs:    	<http://www.w3.org/2000/01/rdf-schema#> ."+"\n"
+								"@prefix owl:		<http://www.w3.org/2002/07/owl#> ."+"\n\n")
+				KB_Output.write(deviceTriples+"\n")
 		
+
+def determineCollectionVectors(connection_details, database_name):
+	#This is a function that runs constructor queries against the knowledgebase to 'discover' new knowledge. 
+	#Here, based on the device features derived in the by the device dict made from the social IOT dataset
+	#we are able to determine which collection vectors are available to each device. 
+
+	conn = stardog.Connection(database_name, **connection_details)
+	conn.begin()
+	
+
+	#For Sight 
+
+	sightQuery = """
+		PREFIX sense: <https://github.com/osullik/IoT-Privacy/blob/main/senses.ttl>
+		PREFIX social_IOT_KB: <https://github.com/osullik/IoT-Privacy/blob/main/social_IOT_KB.ttl>
+
+		CONSTRUCT {
+    		?Device sense:collects sense:Sight
+		}
+		WHERE{
+    		?Device sense:hasCamera true
+		}
+		"""
+	sightGraph = conn.graph(sightQuery)
+
+
+	#For Sound
+
+	soundQuery = """
+		PREFIX sense: <https://github.com/osullik/IoT-Privacy/blob/main/senses.ttl>
+		PREFIX social_IOT_KB: <https://github.com/osullik/IoT-Privacy/blob/main/social_IOT_KB.ttl>
+
+		CONSTRUCT {
+    		?Device sense:collects sense:Sound
+		}
+		WHERE{
+    		?Device sense:hasMicrophone true
+		}
+		"""
+	soundGraph = conn.graph(soundQuery)
+
+		#For Time 
+
+	timeQuery = """
+		PREFIX sense: <https://github.com/osullik/IoT-Privacy/blob/main/senses.ttl>
+		PREFIX social_IOT_KB: <https://github.com/osullik/IoT-Privacy/blob/main/social_IOT_KB.ttl>
+
+		CONSTRUCT {
+    		?Device sense:collects sense:Time
+		}
+		WHERE{
+    		?Device sense:hasClock true
+		}
+		"""
+	timeGraph = conn.graph(timeQuery)
+
+		#For Location
+
+	locatorQuery = """
+		PREFIX sense: <https://github.com/osullik/IoT-Privacy/blob/main/senses.ttl>
+		PREFIX social_IOT_KB: <https://github.com/osullik/IoT-Privacy/blob/main/social_IOT_KB.ttl>
+		CONSTRUCT {
+    		?Device sense:collects sense:Location
+		}
+		WHERE{
+    		?Device sense:hasLocator true
+		}
+		"""
+	locatorGraph = conn.graph(locatorQuery)
+
+
+	#Merge all the query results into one entity. 
+	totalGraph = (sightGraph + soundGraph + timeGraph + locatorGraph)
+
+	#decode the bytestream
+	decodedTotal = (totalGraph.decode("utf-8"))
+
+	#remove full URIs & Query Prefixes, Replacing with shortened URIs (on upload to stardog the "https:\\" was triggering a new domain)
+	# & so removal was necessary for functionality. It also improves readability
+	cleanedTotal = decodedTotal.replace("@prefix social_IOT_KB: <https://github.com/osullik/IoT-Privacy/blob/main/social_IOT_KB.ttl> .","") #remove the prefix
+	cleanedTotal = cleanedTotal.replace("@prefix sense: <https://github.com/osullik/IoT-Privacy/blob/main/senses.ttl> .","") #remove the prefix
+	cleanedTotal = cleanedTotal.replace("<https://github.com/osullik/IoT-Privacy/blob/main/social_IOT_KB.ttl","social_IOT_KB:")
+	cleanedTotal = cleanedTotal.replace("> <https://github.com/osullik/IoT-Privacy/blob/main/senses.ttl"," sense:")
+	cleanedTotal = cleanedTotal.replace("> ."," .")
+	#Add in clean prefixes to the start of the file. 
+	cleanedTotal = ("@prefix privacy: <https://github.com/osullik/IoT-Privacy/blob/main/privacy.ttl>.\n"
+		+"@prefix sense: <https://github.com/osullik/IoT-Privacy/blob/main/senses.ttl>.\n"
+		+"@prefix social_IOT_KB: <https://github.com/osullik/IoT-Privacy/blob/main/social_IOT_KB.ttl>.\n\n"
+		+cleanedTotal)
+
+	#Export the Collection Vectors to a File called "collectionVectors.ttl"
+	with open("collectionVectors_KB.ttl", "w") as cvOut:
+								cvOut.write(cleanedTotal)
+	
+	#Add the new triples to the data store. 						
+	conn.add(stardog.content.File("collectionVectors_KB.ttl"))
+	conn.commit
 
 
 #Executes the function & puts the result into this deviceDict dictionary
-deviceDict = CreateDeviceDict()
+#deviceDict = CreateDeviceDict()
+#createKBTriples(deviceDict)
 #createSocial_IOT_KB(connection_details, knowledgebase_name)
-createKBTriples(deviceDict)
-
+determineCollectionVectors(connection_details, knowledgebase_name)
 
 
 	
