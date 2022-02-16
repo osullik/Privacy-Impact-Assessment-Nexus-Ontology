@@ -5,6 +5,8 @@
 ############
 
 @prefix privacy: <https://github.com/osullik/IoT-Privacy/blob/main/privacy.ttl>.
+@prefix sense: <https://github.com/osullik/IoT-Privacy/blob/main/senses.ttl>.
+@prefix social_IOT_KB: <https://github.com/osullik/IoT-Privacy/blob/main/social_IOT_KB.ttl>.
 
 @prefix rdf:    	<http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix xsd:     	<http://www.w3.org/2001/XMLSchema#> .
