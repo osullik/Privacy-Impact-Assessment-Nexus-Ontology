@@ -1,5 +1,7 @@
 import csv, stardog, os.path, json, pandas as pd, io 
 from rdflib import Graph
+import names #used to generate random names to use in the Knowledgebase 
+import random
 
 #details for Stardog DB Connection
 connection_details = {
@@ -100,6 +102,13 @@ def CreateDeviceDict():
 		else:
 			devicesDict[row[0]] = {"deviceType": row[2] , "userID":row[1], "deviceServices":servicesDict[row[2]]}
 		count+= 1
+		
+
+		#if count >1000: #REMOVE ME AFTER TESTING
+		#	break
+
+
+
 	return devicesDict 
 
 
@@ -126,10 +135,9 @@ def createKBTriples(deviceDict):
 		userID = value["userID"]
 		servicesList = value["deviceServices"] 
 		deviceTriples = makeRDFTriple(deviceID, deviceType, userID, servicesList)
-		createTTLFile(deviceTriples, firstTimeFlag)
+		personaNames = makeTriplesForPersona(userID)
+		createTTLFile(deviceTriples, personaNames, firstTimeFlag)
 		firstTimeFlag = False
-
-
 
 
 def makeRDFTriple(DeviceID, DeviceType, UserID, ServicesList):
@@ -188,6 +196,114 @@ def makeRDFTriple(DeviceID, DeviceType, UserID, ServicesList):
 		)
 	return(returnString)
 
+def makeTriplesForPersona(UserID):
+	#The purpose of this function is to create Persona entities to instantiate the "social_IOT_KB knoweldgebase"
+	#It accepts an input of a UserID (Derived from the social IOT Dataset User ID) and generates a random name (acting as a placeholder here)
+	#From there, it creates the RDF triples to create a persona entity and its related properties. 
+	#It outputs an RDF Triple as a formatted string. 
+
+	''' Format to get to is: 
+		Social_IOT_KB:Persona(<UserID>)
+		rdf:type: privacy:Persona ;
+		privacy:personaID "<UserID>" ;
+		privacy:personaName"<RandomName>" .
+	'''
+
+	randomName = names.get_full_name() #generates a random name for the user. 
+
+	entityString = "social_IOT_KB:Persona_{userID}".format(userID=UserID)
+	typeString = "rdf:type privacy:Persona ;"
+	uidString = "privacy:personaID \"{userID}\" ;".format(userID=UserID)
+	nameString = "privacy:personaName \"{userName}\" .".format(userName=randomName)
+
+	
+
+
+	returnString = (
+		entityString+"\n"
+		"\t"+typeString+"\n"
+		"\t"+uidString+"\n"
+		"\t"+nameString+"\n\n"
+		)
+
+	# The following is intended to randomly assign Identity, Action, Time, Location & Motive to Personas. An instantiated value here is indicative of 
+	#the persona having "vulnerability" of having this dimension collected on. 
+	# All of the outputs are appended to the large "ReturnString defined above."
+
+	for i in range (0, 5): # loop range to stand in for each of the Persona Vulnerability dimensions of (Identity, Action, Time, Location & Motive)
+
+		randomBool = bool(random.getrandbits(1)) # if True, the "display" of vulerablility will be instantiated, if False, it will not. 
+
+		if randomBool == False:
+			pass
+
+		else:
+			
+			#Add an identity vunerability
+			if (i == 0):
+				id_string = "social_IOT_KB:Persona_{userID}_Identity".format(userID=UserID)
+				id_typeString = "rdf:type privacy:Identity ;"
+				id_uidString = "privacy:personaID \"{userID}\" .".format(userID=UserID)
+
+				returnString = (
+					returnString
+					+id_string+"\n"
+					"\t"+id_typeString+"\n"
+					"\t"+id_uidString+"\n\n")	
+
+			#Add an Action Vulnerability
+			if (i == 1):
+				act_string = "social_IOT_KB:Persona_{userID}_Action".format(userID=UserID)
+				act_typeString = "rdf:type privacy:Action ;"
+				act_uidString = "privacy:personaID \"{userID}\" .".format(userID=UserID)
+
+				returnString = (
+					returnString
+					+act_string+"\n"
+					"\t"+act_typeString+"\n"
+					"\t"+act_uidString+"\n\n")	
+
+			#Add a time vulnerability 
+			if (i == 2):
+				ti_string = "social_IOT_KB:Persona_{userID}_Timing".format(userID=UserID)
+				ti_typeString = "rdf:type privacy:Time ;"
+				ti_uidString = "privacy:personaID \"{userID}\" .".format(userID=UserID)
+
+				returnString = (
+					returnString
+					+ti_string+"\n"
+					"\t"+ti_typeString+"\n"
+					"\t"+ti_uidString+"\n\n")	
+
+			#Add a location vulnerability
+			if (i == 3):
+				lo_string = "social_IOT_KB:Persona_{userID}_Location".format(userID=UserID)
+				lo_typeString = "rdf:type privacy:Location ;"
+				lo_uidString = "privacy:personaID \"{userID}\" .".format(userID=UserID)
+
+				returnString = (
+					returnString
+					+lo_string+"\n"
+					"\t"+lo_typeString+"\n"
+					"\t"+lo_uidString+"\n\n")
+
+			#Add a motive vulnerability
+			if (i == 4):
+				mo_string = "social_IOT_KB:Persona_{userID}_Motive".format(userID=UserID)
+				mo_typeString = "rdf:type privacy:Motive ;"
+				mo_uidString = "privacy:personaID \"{userID}\" .".format(userID=UserID)
+
+				returnString = (
+					returnString
+					+mo_string+"\n"
+					"\t"+mo_typeString+"\n"
+					"\t"+mo_uidString+"\n\n")
+			else:
+				pass
+
+
+	return(returnString)
+
 
 def createSocial_IOT_KB(connection_details, database_name):
 	#This function is designed to create the Social IOT Knowledgebase from available TTL Files. 
@@ -200,7 +316,9 @@ def createSocial_IOT_KB(connection_details, database_name):
 		if database_name in [db.name for db in admin.databases()]:
 			admin.database(database_name).drop()
 		db = admin.new_database(database_name)
-
+		db.add_namespace("sense", "https://github.com/osullik/IoT-Privacy/blob/main/senses.ttl")
+		db.add_namespace("privacy", "https://github.com/osullik/IoT-Privacy/blob/main/privacy.ttl")
+		db.add_namespace("social_IOT_KB", "https://github.com/osullik/IoT-Privacy/blob/main/social_IOT_KB.ttl")
 
 	#define the connection that data will be passed across
 	conn = stardog.Connection(database_name, **connection_details)
@@ -211,9 +329,6 @@ def createSocial_IOT_KB(connection_details, database_name):
 
 
 	#Add the content (here the two schema files and the Social IOT Knowledgebase.)
-	conn.add_namespace("sense:", "https://github.com/osullik/IoT-Privacy/blob/main/senses.ttl")
-	conn.add_namespace("privacy:", "https://github.com/osullik/IoT-Privacy/blob/main/privacy.ttl")
-	conn.add_namespace("social_IOT_KB:", "https://github.com/osullik/IoT-Privacy/blob/main/social_IOT_KB.ttl")
 	conn.add(stardog.content.File('privacy.ttl'))
 	conn.add(stardog.content.File('senses.ttl'))
 	conn.add(stardog.content.File('social_IOT_KB.ttl'))
@@ -221,7 +336,7 @@ def createSocial_IOT_KB(connection_details, database_name):
 	#Commit the added content
 	conn.commit()
 
-def createTTLFile(deviceTriples, firstTimeFlag):
+def createTTLFile(deviceTriples, personaNames, firstTimeFlag):
 	if firstTimeFlag == True:
 		if os.path.isfile("./social_IOT_KB.ttl") == True:
 			os.remove("./social_IOT_KB.ttl")
@@ -232,6 +347,7 @@ def createTTLFile(deviceTriples, firstTimeFlag):
 		if os.path.isfile("./social_IOT_KB.ttl") == True:
 			with open("social_IOT_KB.ttl", "a") as KB_Output:
 				KB_Output.write(deviceTriples+"\n")
+				KB_Output.write(personaNames+"\n")
 		else:
 			with open("social_IOT_KB.ttl", "w") as KB_Output:
 				KB_Output.write("#RDF Triples generated automatically from the Social IOT Dataset"+"\n\n"
@@ -243,6 +359,7 @@ def createTTLFile(deviceTriples, firstTimeFlag):
 								"@prefix rdfs:    	<http://www.w3.org/2000/01/rdf-schema#> ."+"\n"
 								"@prefix owl:		<http://www.w3.org/2002/07/owl#> ."+"\n\n")
 				KB_Output.write(deviceTriples+"\n")
+				KB_Output.write(personaNames+"\n")
 		
 
 def determineCollectionVectors(connection_details, database_name):
@@ -340,13 +457,13 @@ def determineCollectionVectors(connection_details, database_name):
 	
 	#Add the new triples to the data store. 						
 	conn.add(stardog.content.File("collectionVectors_KB.ttl"))
-	conn.commit
+	conn.commit()
 
 
 #Executes the function & puts the result into this deviceDict dictionary
-#deviceDict = CreateDeviceDict()
-#createKBTriples(deviceDict)
-#createSocial_IOT_KB(connection_details, knowledgebase_name)
+deviceDict = CreateDeviceDict()
+createKBTriples(deviceDict)
+createSocial_IOT_KB(connection_details, knowledgebase_name)
 determineCollectionVectors(connection_details, knowledgebase_name)
 
 

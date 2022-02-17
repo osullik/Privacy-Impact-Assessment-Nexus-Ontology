@@ -161,45 +161,57 @@ sense:collects
 
 # Inter-namespace Relations (From Senses to Privacy)
 
+sense:feeds
+	rdf:type rdfs:Property;
+	rdfs:comment"The overarching relationship between a collection vector and sensory diemnsions"^^xsd:string ; 
+	rdfs:label"Feeds"^^xsd:string ;
+	rdfs:domain sense:CollectionVector ; 
+	rdfs:range privacy:InterrogativeDimensions .
+
 sense:seesWho 
 	rdf:type rdfs:Property;
 	rdfs:comment"The relationship between a seeing device and the identity it sees"^^xsd:string ; 
 	rdfs:label"Who the sight sensor sees"^^xsd:string ;
 	rdfs:domain sense:Sight ; 
-	rdfs:range privacy:Identity .	
+	rdfs:range privacy:Identity ;
+	rdfs:subPropertyOf sense:feeds .	
 
 sense:seesWhat
 	rdf:type rdfs:Property;
 	rdfs:comment"The relationship between a seeing device and the action it sees"^^xsd:string ; 
 	rdfs:label"What the sight sensor sees"^^xsd:string ;
 	rdfs:domain sense:Sight ; 
-	rdfs:range privacy:Action .	
+	rdfs:range privacy:Action ;
+	rdfs:subPropertyOf sense:feeds .
 
 sense:hearsWho 
 	rdf:type rdfs:Property;
 	rdfs:comment"The relationship between a hearing device and the identity it hears"^^xsd:string ; 
 	rdfs:label"Who the sound sensor hears"^^xsd:string ;
 	rdfs:domain sense:Sound ; 
-	rdfs:range privacy:Identity .	
+	rdfs:range privacy:Identity ;
+	rdfs:subPropertyOf sense:feeds .
 
 sense:hearsWhat
 	rdf:type rdfs:Property;
 	rdfs:comment"The relationship between a hearing device and the action it hears"^^xsd:string ; 
 	rdfs:label"What the sound sensor hears"^^xsd:string ;
 	rdfs:domain sense:Sound ; 
-	rdfs:range privacy:Action .	
+	rdfs:range privacy:Action ;
+	rdfs:subPropertyOf sense:feeds .
 
 sense:locatesWhere
 	rdf:type rdfs:Property;
 	rdfs:comment"The relatinship between a locating sensor and the location it records"^^xsd:string ; 
 	rdfs:label"Where the locator locates"^^xsd:string ;
 	rdfs:domain sense:Location ; 
-	rdfs:range privacy:Location .	
+	rdfs:range privacy:Location ;
+	rdfs:subPropertyOf sense:feeds .
 
 sense:occursWhen
 	rdf:type rdfs:Property;
 	rdfs:comment"The relatinship between a timing sensor and the time it records"^^xsd:string ; 
 	rdfs:label"When the vector is collected"^^xsd:string ;
 	rdfs:domain sense:Time ; 
-	rdfs:range privacy:Time .	
-
+	rdfs:range privacy:Time ;
+	rdfs:subPropertyOf sense:feeds .
