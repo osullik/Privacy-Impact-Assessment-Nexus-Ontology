@@ -105,8 +105,8 @@ def CreateDeviceDict():
 		
 
 		#Used to make testing more efficient
-		#if count >1000: #REMOVE ME AFTER TESTING
-		#	break
+		if count >1000: #REMOVE ME AFTER TESTING
+			break
 
 
 
@@ -126,6 +126,7 @@ def createKBTriples(deviceDict):
 	deviceType = ""
 	userID = ""
 	servicesList = []
+	nameDict = {} # holds a dict of all the names returned from the makeTriplesForPersona function to ensure uniqueness. Key = UID, Val = Name
 
 	#Steps through each dictionary item & extracts the relevant values. From there, it pushes them into a function
 	#that transforms them to a series of RDF triples, and then feeds those triples into a process that creates the knowledgevase in a Turtle file.
@@ -136,7 +137,8 @@ def createKBTriples(deviceDict):
 		userID = value["userID"]
 		servicesList = value["deviceServices"] 
 		deviceTriples = makeRDFTriple(deviceID, deviceType, userID, servicesList)
-		personaNames = makeTriplesForPersona(userID)
+		personaNames, returnedName = makeTriplesForPersona(userID, nameDict)
+		nameDict[userID] = returnedName
 		createTTLFile(deviceTriples, personaNames, firstTimeFlag)
 		firstTimeFlag = False
 
@@ -197,7 +199,7 @@ def makeRDFTriple(DeviceID, DeviceType, UserID, ServicesList):
 		)
 	return(returnString)
 
-def makeTriplesForPersona(UserID):
+def makeTriplesForPersona(UserID, nameDict):
 	#The purpose of this function is to create Persona entities to instantiate the "social_IOT_KB knoweldgebase"
 	#It accepts an input of a UserID (Derived from the social IOT Dataset User ID) and generates a random name (acting as a placeholder here)
 	#From there, it creates the RDF triples to create a persona entity and its related properties. 
@@ -211,6 +213,14 @@ def makeTriplesForPersona(UserID):
 	'''
 
 	randomName = names.get_full_name() #generates a random name for the user. 
+
+	#Ensure a unique UID to Name mapping. 
+	if UserID in nameDict.keys():
+		randomName = nameDict[UserID]
+
+	else:
+		while randomName in nameDict.values():
+			randomName = names.get_full_name()
 
 	entityString = "social_IOT_KB:Persona_{userID}".format(userID=UserID)
 	typeString = "rdf:type privacy:Persona ;"
@@ -276,87 +286,7 @@ def makeTriplesForPersona(UserID):
 		"\t"+mo_Bool+"\n"
 		)
 
-	return(returnString)
-
-
-	'''
-	# The following is intended to randomly assign Identity, Action, Time, Location & Motive to Personas. An instantiated value here is indicative of 
-	#the persona having "vulnerability" of having this dimension collected on. 
-	# All of the outputs are appended to the large "ReturnString defined above."
-
-	for i in range (0, 5): # loop range to stand in for each of the Persona Vulnerability dimensions of (Identity, Action, Time, Location & Motive)
-
-		randomBool = bool(random.getrandbits(1)) # if True, the "display" of vulerablility will be instantiated, if False, it will not. 
-
-		if randomBool == False:
-			pass
-
-		else:
-			
-			#Add an identity vunerability
-			if (i == 0):
-				id_string = "social_IOT_KB:Persona_{userID}_Identity".format(userID=UserID)
-				id_typeString = "rdf:type privacy:Identity ;"
-				id_uidString = "privacy:personaID \"{userID}\" .".format(userID=UserID)
-
-				returnString = (
-					returnString
-					+id_string+"\n"
-					"\t"+id_typeString+"\n"
-					"\t"+id_uidString+"\n\n")	
-
-			#Add an Action Vulnerability
-			if (i == 1):
-				act_string = "social_IOT_KB:Persona_{userID}_Action".format(userID=UserID)
-				act_typeString = "rdf:type privacy:Action ;"
-				act_uidString = "privacy:personaID \"{userID}\" .".format(userID=UserID)
-
-				returnString = (
-					returnString
-					+act_string+"\n"
-					"\t"+act_typeString+"\n"
-					"\t"+act_uidString+"\n\n")	
-
-			#Add a time vulnerability 
-			if (i == 2):
-				ti_string = "social_IOT_KB:Persona_{userID}_Timing".format(userID=UserID)
-				ti_typeString = "rdf:type privacy:Time ;"
-				ti_uidString = "privacy:personaID \"{userID}\" .".format(userID=UserID)
-
-				returnString = (
-					returnString
-					+ti_string+"\n"
-					"\t"+ti_typeString+"\n"
-					"\t"+ti_uidString+"\n\n")	
-
-			#Add a location vulnerability
-			if (i == 3):
-				lo_string = "social_IOT_KB:Persona_{userID}_Location".format(userID=UserID)
-				lo_typeString = "rdf:type privacy:Location ;"
-				lo_uidString = "privacy:personaID \"{userID}\" .".format(userID=UserID)
-
-				returnString = (
-					returnString
-					+lo_string+"\n"
-					"\t"+lo_typeString+"\n"
-					"\t"+lo_uidString+"\n\n")
-
-			#Add a motive vulnerability
-			if (i == 4):
-				mo_string = "social_IOT_KB:Persona_{userID}_Motive".format(userID=UserID)
-				mo_typeString = "rdf:type privacy:Motive ;"
-				mo_uidString = "privacy:personaID \"{userID}\" .".format(userID=UserID)
-
-				returnString = (
-					returnString
-					+mo_string+"\n"
-					"\t"+mo_typeString+"\n"
-					"\t"+mo_uidString+"\n\n")
-			else:
-				pass
-		'''
-
-	return(returnString)
+	return(returnString, randomName)
 
 
 def createSocial_IOT_KB(connection_details, database_name):
@@ -664,12 +594,196 @@ def determinePersonaCompromise(connection_details, database_name):
 	conn.add(stardog.content.File("personaCompromise_KB.ttl"))
 	conn.commit()
 
+
+def determinePrivacyImpacts(connection_details, database_name):
+	#The purpose of this function is to determine which privacy impacts are present for a given device - vector - persona grouping
+	# it accepts as an input the stardog endpoint details, and uses those to connect to the existing stardog instance 
+	# it queries the instance to construct relationships where the appropriate conditions for a privacy risk are met (See Readme "Interesection" section)
+	# it returns no value but produces a .ttl file of the results, which it also populates into the database. 
+
+	conn = stardog.Connection(database_name, **connection_details)
+	conn.begin()
+
+	##For Personal Privacy 
+
+	pp_Query = """
+		CONSTRUCT{
+		    ?Persona privacy:threatens privacy:PersonalPrivacy
+		}
+		WHERE{
+		    ?Device sense:deviceUser ?UID . 
+		    ?Persona privacy:personaID ?UID .
+		    ?Device sense:seesWho ?Persona .
+		    ?Device sense:hearsWho ?Persona
+		    }
+		"""
+	pp_Graph = conn.graph(pp_Query)
+
+
+	## For Behaviour and Action Privacy
+
+	ba_Query = """
+		CONSTRUCT{
+		    ?Persona privacy:threatens privacy:BehaviourAndActionPrivacy
+		}
+		WHERE{
+		    ?Device sense:deviceUser ?UID . 
+		    ?Persona privacy:personaID ?UID .
+		    ?Device sense:seesWho ?Persona .
+		    ?Device sense:seesWhat ?Persona .
+		    }          
+		"""
+	ba_Graph = conn.graph(ba_Query)
+
+
+	## For Communication Privacy
+
+	cp_Query = """
+		CONSTRUCT{
+		    ?Persona privacy:threatens privacy:CommunicationPrivacy
+		}
+		WHERE{
+		    ?Device sense:deviceUser ?UID . 
+		    ?Persona privacy:personaID ?UID .
+		    ?Device sense:hearsWho ?Persona .
+		    ?Device sense:hearsWhat ?Persona .
+		    ?Device sense:occursWhen ?Persona 
+		}         
+		"""
+	cp_Graph = conn.graph(cp_Query)
+
+	## For Data and Image Privacy
+
+		#Excluded here, due to lack of granularity in representing system compromise, wire taps etc. FUTURE WORK. 
+
+	## For Thoughts and Feelings Privacy
+
+	tf_Query = """
+		CONSTRUCT{
+		    ?Persona privacy:threatens privacy:ThoughtAndFeelingPrivacy
+		}
+		WHERE{
+		    ?Device sense:deviceUser ?UID . 
+		    ?Persona privacy:personaID ?UID .
+		    ?Device sense:seesWhat ?Persona .
+		    ?Device sense:hearsWhat ?Persona .
+		    
+		    {?Device sense:seesWho ?Persona} 
+		UNION
+		    {?Device sense:seesWhy ?Persona}
+		UNION
+		    {?Device sense:hearsWho ?Persona}
+		UNION    
+		    {?Device sense:hearsWhy ?Persona}
+		}     
+		"""
+	tf_Graph = conn.graph(tf_Query)
+
+	## For Location and Space Privacy
+
+	ls_Query = """
+
+		CONSTRUCT{
+		    ?Persona privacy:threatens privacy:LocationAndSpacePrivacy
+		}
+		WHERE{
+		    ?Device sense:deviceUser ?UID . 
+		    ?Persona privacy:personaID ?UID .
+		    ?Device sense:occursWhen ?Persona .
+		    ?Device sense:locatesWhere ?Persona .
+		    {?Device sense:seesWho ?Persona}
+		UNION
+		    {?Device sense:hearsWho ?Persona}
+		}     
+		"""
+	ls_Graph = conn.graph(ls_Query)
+
+	## For Association Privacy
+
+	as_Query = """
+		CONSTRUCT{
+		    ?Persona privacy:threatens privacy:AssociatonPrivacy
+		}
+		WHERE{
+		    ?Device sense:deviceUser ?UID . 
+		    ?Persona privacy:personaID ?UID .
+		    ?Device sense:locatesWhere ?Persona .
+		    ?Device sense:occursWhen ?Persona .
+		    {?Device sense:hearsWho ?Persona}
+			UNION
+		    {?Device sense:seesWho ?Persona} 
+		}    
+		"""
+	as_Graph = conn.graph(as_Query)
+
+
+	#Merge all the query results into one entity. 
+	totalGraph = (pp_Graph + ba_Graph +cp_Graph + tf_Graph + ls_Graph + as_Graph)
+
+	#decode the bytestream
+	decodedTotal = (totalGraph.decode("utf-8"))	
+
+	#remove full URIs & Query Prefixes, Replacing with shortened URIs (on upload to stardog the "https:\\" was triggering a new domain)
+	# & so removal was necessary for functionality. It also improves readability
+	cleanedTotal = decodedTotal.replace("<https://github.com/osullik/IoT-Privacy/blob/main/social_IOT_KB.ttl","social_IOT_KB:")
+	cleanedTotal = cleanedTotal.replace("> <https://github.com/osullik/IoT-Privacy/blob/main/senses.ttl"," sense:")
+	cleanedTotal = cleanedTotal.replace("> <https://github.com/osullik/IoT-Privacy/blob/main/privacy.ttl"," privacy:")
+	cleanedTotal = cleanedTotal.replace("Who>", "Who")	
+	cleanedTotal = cleanedTotal.replace("What>", "What")	
+	cleanedTotal = cleanedTotal.replace("When>", "When")	
+	cleanedTotal = cleanedTotal.replace("Where>", "Where")	
+	cleanedTotal = cleanedTotal.replace("Why>", "Why")
+	cleanedTotal = cleanedTotal.replace("<https://github.com/osullik/IoT-Privacy/blob/main/privacy.ttlThoughtAndFeelingPrivacy>", "\nprivacy:ThoughtAndFeelingPrivacy .")
+	cleanedTotal = cleanedTotal.replace("<https://github.com/osullik/IoT-Privacy/blob/main/privacy.ttlLocationAndSpacePrivacy>", "\nprivacy:LocationAndSpacePrivacy .")
+	cleanedTotal = cleanedTotal.replace("<https://github.com/osullik/IoT-Privacy/blob/main/privacy.ttlAssociatonPrivacy", "\nprivacy:AssociatonPrivacy .")	
+	cleanedTotal = cleanedTotal.replace("Privacy>", "Privacy")		
+	cleanedTotal = cleanedTotal.replace("> ."," .")
+	cleanedTotal = cleanedTotal.replace(","," .")
+
+	#Add in clean prefixes to the start of the file. 
+	cleanedTotal = ("@prefix privacy: <https://github.com/osullik/IoT-Privacy/blob/main/privacy.ttl>.\n"
+		+"@prefix sense: <https://github.com/osullik/IoT-Privacy/blob/main/senses.ttl>.\n"
+		+"@prefix social_IOT_KB: <https://github.com/osullik/IoT-Privacy/blob/main/social_IOT_KB.ttl>.\n\n"
+		+cleanedTotal)
+
+
+	#Export the privacyImpacts to a File called "privacyImpacts.ttl"
+	with open("privacyImpacts_KB.ttl", "w") as piOut:
+								piOut.write(cleanedTotal)
+
+	#Code to deal with the case where the returned results are seperated by commas (i.e. one persona has many devices which impact their privacy)
+	#Keeping the magnitude of compromise vectors is important and so is preserved here. 
+	inlines = [line for line in open("privacyImpacts_KB.ttl", "r")]
+	outlines = []
+	index = 0
+	for line in inlines:
+		if line.startswith("privacy:"):
+			tempIndex = index
+			while inlines[tempIndex -1].startswith("privacy:"):
+				tempIndex -= 1
+			outlines.append(inlines[tempIndex-1])
+			index +=1
+		else:
+			outlines.append(line)
+			index +=1
+	
+	#Export the privacyImpacts to a File called "privacyImpacts.ttl"
+	with open("privacyImpacts_KB.ttl", "w") as piOut2:
+		for line in outlines:
+			piOut2.write(line)
+
+	#Add the new triples to the data store. 						
+	conn.add(stardog.content.File("privacyImpacts_KB.ttl"))
+	conn.commit()
+
+
 #Executes the function & puts the result into this deviceDict dictionary
 deviceDict = CreateDeviceDict()
 createKBTriples(deviceDict)
 createSocial_IOT_KB(connection_details, knowledgebase_name)
 determineCollectionVectors(connection_details, knowledgebase_name)
 determinePersonaCompromise(connection_details, knowledgebase_name)
+determinePrivacyImpacts(connection_details, knowledgebase_name)
 
 
 	

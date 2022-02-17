@@ -21,12 +21,12 @@ The privacy namespace consists of two key entity groups: PrivacyTypes and Interr
 
 |              			| Identity (WHO) | Action (WHAT) | Time (WHEN) | Location (WHERE) | Motive (WHY) |
 |-----------------------|----------------|---------------|-------------|------------------|--------------|
-| Personal Privacy 	    | whoIs 		 |				 | whenIs	   | whereIs		  |				 |
-| Behaviour and Action  | whoDid		 | whatDid		 | whenDid	   | whereDid 		  |				 |   
-| Communication			| whoSaid		 | 				 | whenSaid	   | whereSaid		  | whySaid		 |
-| Data and Image		| whoData		 | whatData		 | whenData    | 				  | 			 |
-| Thoughts and Feelings | whoThought	 | whatThought 	 | whenThought | 				  | whyThought 	 |
-| Location and space 	| whoAt 		 | 				 | whenAt 	   | 				  | 			 |
+| Personal Privacy 	    | whoIs 		 |				 | 			   | 				  |				 |
+| Behaviour and Action  | whoDid		 | whatDid		 | 			   | 		 		  |				 |   
+| Communication			| whoSaid		 | whatSaid		 | whenSaid	   | 				  | 			 |
+| Data and Image		| whoData		 | whatData		 | 			   | 				  | 			 |
+| Thoughts and Feelings | whoThought	 | whatThought 	 |			   | 				  | whyThought 	 |
+| Location and space 	| whoAt 		 | 				 | whenAt 	   | whereAt		  | 			 |
 | Association 			| whoWith		 | 				 | whenWith    | whereWith 		  | 			 |
 
 

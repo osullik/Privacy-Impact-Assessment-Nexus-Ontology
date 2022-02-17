@@ -224,7 +224,13 @@ privacy:whatDid
 	rdfs:range privacy:BehaviourAndActionPrivacy ;
 	rdfs:subPropertyOf privacy:threatens .
 
-#No Action - Communication relationship defined. The fact a communication occured is assumed. Content of a message covered in "whySaid"
+privacy:whatSaid
+	rdf:type rdfs:Property ; 
+	rdfs:comment "Identification of the content of a communication"^^xsd:string ;
+	rdfs:label "What was the content of the communication" ; 
+	rdfs:domain privacy:Action ; 
+	rdfs:range privacy:CommunicationPrivacy ;
+	rdfs:subPropertyOf privacy:threatens .
 
 privacy:whatData
 	rdf:type rdfs:Property ; 
@@ -249,44 +255,12 @@ privacy:whatThought
 
 ##Relationships about time (WHEN): 
 
-privacy:whenIs
-	rdf:type rdfs:Property ; 
-	rdfs:comment "The time an individual is identified"^^xsd:string ;
-	rdfs:label "When is an individual identified" ; 
-	rdfs:domain privacy:Time ; 
-	rdfs:range privacy:PersonalPrivacy ;
-	rdfs:subPropertyOf privacy:threatens .
-
-privacy:whenDid
-	rdf:type rdfs:Property ; 
-	rdfs:comment "The time an individual completed an action"^^xsd:string ;
-	rdfs:label "When is an individual acted" ; 
-	rdfs:domain privacy:Time ; 
-	rdfs:range privacy:BehaviourAndActionPrivacy ;
-	rdfs:subPropertyOf privacy:threatens .
-
 privacy:whenSaid
 	rdf:type rdfs:Property ; 
 	rdfs:comment "The time an individual sent a communication"^^xsd:string ;
 	rdfs:label "When is an individual communicated" ; 
 	rdfs:domain privacy:Time ; 
 	rdfs:range privacy:CommunicationPrivacy ;
-	rdfs:subPropertyOf privacy:threatens .
-
-privacy:whenData
-	rdf:type rdfs:Property ; 
-	rdfs:comment "The time associated with collected Data"^^xsd:string ;
-	rdfs:label "When is this data from" ; 
-	rdfs:domain privacy:Time ; 
-	rdfs:range privacy:DataAndImagePrivacy ;
-	rdfs:subPropertyOf privacy:threatens .
-
-privacy:whenThought
-	rdf:type rdfs:Property ; 
-	rdfs:comment "The time an individual had a thought (note: likely inferred from message or conversation)."^^xsd:string ;
-	rdfs:label "When is an individual having a thought or feeling" ; 
-	rdfs:domain privacy:Time ; 
-	rdfs:range privacy:ThoughtAndFeelingPrivacy ;
 	rdfs:subPropertyOf privacy:threatens .
 
 privacy:whenAt
@@ -307,42 +281,18 @@ privacy:whenWith
 
 ##Relationships about Location (WHERE):
 
-privacy:whereIs
+privacy:whereAt
 	rdf:type rdfs:Property ; 
-	rdfs:comment "The Location an individual is identified"^^xsd:string ;
-	rdfs:label "Where is an individual identified" ; 
+	rdfs:comment "The location of a location"^^xsd:string ;
+	rdfs:label "Where a location is located (i.e. the location is known)" ; 
 	rdfs:domain privacy:Location ; 
-	rdfs:range privacy:PersonalPrivacy ;
+	rdfs:range privacy:LocationAndSpacePrivacy ;
 	rdfs:subPropertyOf privacy:threatens .
-
-privacy:whereDid
-	rdf:type rdfs:Property ; 
-	rdfs:comment "The Location an individual committed an act"^^xsd:string ;
-	rdfs:label "Where did an action occur" ; 
-	rdfs:domain privacy:Location ; 
-	rdfs:range privacy:BehaviourAndActionPrivacy ;
-	rdfs:subPropertyOf privacy:threatens .
-
-
-privacy:whereSaid
-	rdf:type rdfs:Property ; 
-	rdfs:comment "The Location an individual was involved in a communication"^^xsd:string ;
-	rdfs:label "Where did an individual communicate" ; 
-	rdfs:domain privacy:Location ; 
-	rdfs:range privacy:CommunicationPrivacy ;
-	rdfs:subPropertyOf privacy:threatens .
-
-
-#no Location and Data&Image relationship defined. Possible to derive location from priori data but will capture that in the other areas. 
-
-#no Location and thought/feeling relationship defined. Pointless to know where someone was thinking something from a privacy perpsective. 
-
-#No location to location privacy relationship defined. Self-Defining. 
 
 privacy:whereWith
 	rdf:type rdfs:Property ; 
-	rdfs:comment "The Location an individual associates with another"^^xsd:string ;
-	rdfs:label "Where is an individual Associating" ; 
+	rdfs:comment "The location an individual is associated with another"^^xsd:string ;
+	rdfs:label "Where is an individual is Associated with another" ; 
 	rdfs:domain privacy:Location ; 
 	rdfs:range privacy:AssociationPrivacy ;
 	rdfs:subPropertyOf privacy:threatens .
@@ -354,14 +304,7 @@ privacy:whereWith
 
 #No Motive - behaviour relationship defined. Extremely difficult to infer motive as an observer. 
 
-privacy:whySaid
-	rdf:type rdfs:Property ; 
-	rdfs:comment "Motive of an individual is derived from their communication"^^xsd:string ;
-	rdfs:label "Why are they thinking / feeling based on what they communicated" ; 
-	rdfs:domain privacy:Motive ; 
-	rdfs:range privacy:CommunicationPrivacy ;
-	rdfs:subPropertyOf privacy:threatens .
-
+#No Motive - communication relationship defined. Extremely difficult to infer WHY someone communicates, just what. 
 
 #no Motive - Data relationship defined. Difficult to infer motive from even aggregated data (Some classification models may be exceptions to this)
 
