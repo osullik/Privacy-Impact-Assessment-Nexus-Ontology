@@ -72,42 +72,12 @@ rdf:type rdfs:Class ;
 	rdfs:subClassOf privacy:PrivacyType.
 
 
-### The following classes relate to the basic sensory dimensions: Who, What, When, Where and Why
+### The following class reprsents the person being threatened, or in this case "Persona"
 
 privacy:Persona
 	rdf:type rdfs:Class ;
 	rdfs:comment "Parent class for the five sensory dimensions" ;
 	rdfs:label "Persona".
-
-privacy:Identity
-	rdf:type rdfs:Class ;
-	rdfs:comment "The ability to determine WHO an individual is"^^xsd:string ;
-	rdfs:label "Identity (WHO)" ;
-	rdfs:subClassOf privacy:Persona.
-
-privacy:Action
-	rdf:type rdfs:Class ;
-	rdfs:comment "The ability to determine WHAT an individual has done"^^xsd:string ;
-	rdfs:label "Action (WHAT)" ;
-	rdfs:subClassOf privacy:Persona.
-
-privacy:Time 
-	rdf:type rdfs:Class ;
-	rdfs:comment "The ability to determine WHEN something occurs"^^xsd:string ;
-	rdfs:label "Time (WHEN)" ;
-	rdfs:subClassOf privacy:Persona.
-
-privacy:Location
-	rdf:type rdfs:Class ;
-	rdfs:comment "The ability to determine WHERE an individual is"^^xsd:string ;
-	rdfs:label "Location (WHERE)" ;
-	rdfs:subClassOf privacy:Persona.
-
-privacy:Motive
-	rdf:type rdfs:Class ;
-	rdfs:comment "The ability to determine WHY an individual does something. Here generally can only be determined if the confidentiality of their communications is breached, as someone telling someone else their motive is the closest that we are likely to get to understanding it"^^xsd:string ;
-	rdfs:label "Motive (WHY)" ;
-	rdfs:subClassOf privacy:Persona.
 
 
 #    ____    ____     ___    ____    _____   ____    _____   ___   _____   ____  
@@ -131,6 +101,41 @@ privacy:personaName
 	rdfs:label "Persona Name"^^xsd:string ;
 	rdfs:domain privacy:Persona ;
 	rdfs:range xsd:string .
+
+privacy:exposesIdentity
+	rdf:type rdf:Property ;
+	rdfs:comment "The ability to determine WHO an individual is"^^xsd:string ;
+	rdfs:label "Exposes Identity (WHO)" ;
+	rdfs:domain privacy:Persona ;
+	rdfs:range xsd:boolean .
+
+privacy:exposesAction
+	rdf:type rdf:Property ;
+	rdfs:comment "The ability to determine WHAT an individual has done"^^xsd:string ;
+	rdfs:label "Exposes Action (WHAT)" ;
+	rdfs:domain privacy:Persona ;
+	rdfs:range xsd:boolean .
+
+privacy:exposesTime 
+	rdf:type rdf:Property ;
+	rdfs:comment "The ability to determine WHEN something occurs"^^xsd:string ;
+	rdfs:label "Exposes Time (WHEN)" ;
+	rdfs:domain privacy:Persona ;
+	rdfs:range xsd:boolean .
+
+privacy:exposesLocation
+	rdf:type rdf:Property ;
+	rdfs:comment "The ability to determine WHERE an individual is"^^xsd:string ;
+	rdfs:label "Exposes Location (WHERE)" ;
+	rdfs:domain privacy:Persona ;
+	rdfs:range xsd:boolean .
+
+privacy:exposesMotive
+	rdf:type rdf:Property ;
+	rdfs:comment "The ability to determine WHY an individual does something. Here generally can only be determined if the confidentiality of their communications is breached, as someone telling someone else their motive is the closest that we are likely to get to understanding it"^^xsd:string ;
+	rdfs:label "Exposes Motive (WHY)" ;
+	rdfs:domain privacy:Persona ;
+	rdfs:range xsd:boolean .
 
 
 #    ____    _____   _          _      _____   ___    ___    _   _   ____    _   _   ___   ____    ____  

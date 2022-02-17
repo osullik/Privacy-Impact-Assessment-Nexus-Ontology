@@ -161,12 +161,12 @@ sense:collects
 
 # Inter-namespace Relations (From Senses to Privacy)
 
-sense:feeds
+sense:compromises
 	rdf:type rdfs:Property;
 	rdfs:comment"The overarching relationship between a collection vector and sensory diemnsions"^^xsd:string ; 
 	rdfs:label"Feeds"^^xsd:string ;
 	rdfs:domain sense:CollectionVector ; 
-	rdfs:range privacy:InterrogativeDimensions .
+	rdfs:range privacy:Persona .
 
 sense:seesWho 
 	rdf:type rdfs:Property;
@@ -182,6 +182,14 @@ sense:seesWhat
 	rdfs:label"What the sight sensor sees"^^xsd:string ;
 	rdfs:domain sense:Sight ; 
 	rdfs:range privacy:Action ;
+	rdfs:subPropertyOf sense:feeds .
+
+sense:seesWhy
+	rdf:type rdfs:Property;
+	rdfs:comment"The relationship between a collection vector and the motive it understands"^^xsd:string ; 
+	rdfs:label"The motive of the persona collected by the sight vector"^^xsd:string ;
+	rdfs:domain sense:Sight ; 
+	rdfs:range privacy:Motive ;
 	rdfs:subPropertyOf sense:feeds .
 
 sense:hearsWho 
@@ -200,6 +208,14 @@ sense:hearsWhat
 	rdfs:range privacy:Action ;
 	rdfs:subPropertyOf sense:feeds .
 
+sense:hearsWhy
+	rdf:type rdfs:Property;
+	rdfs:comment"The relationship between a collection vector and the motive it understands"^^xsd:string ; 
+	rdfs:label"The motive of the persona collected by the sound Vector"^^xsd:string ;
+	rdfs:domain sense:Sound ; 
+	rdfs:range privacy:Motive ;
+	rdfs:subPropertyOf sense:feeds .
+
 sense:locatesWhere
 	rdf:type rdfs:Property;
 	rdfs:comment"The relatinship between a locating sensor and the location it records"^^xsd:string ; 
@@ -215,3 +231,5 @@ sense:occursWhen
 	rdfs:domain sense:Time ; 
 	rdfs:range privacy:Time ;
 	rdfs:subPropertyOf sense:feeds .
+
+

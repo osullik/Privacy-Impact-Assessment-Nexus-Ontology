@@ -104,6 +104,7 @@ def CreateDeviceDict():
 		count+= 1
 		
 
+		#Used to make testing more efficient
 		#if count >1000: #REMOVE ME AFTER TESTING
 		#	break
 
@@ -214,18 +215,71 @@ def makeTriplesForPersona(UserID):
 	entityString = "social_IOT_KB:Persona_{userID}".format(userID=UserID)
 	typeString = "rdf:type privacy:Persona ;"
 	uidString = "privacy:personaID \"{userID}\" ;".format(userID=UserID)
-	nameString = "privacy:personaName \"{userName}\" .".format(userName=randomName)
+	nameString = "privacy:personaName \"{userName}\" ;".format(userName=randomName)
 
-	
+
+	for i in range (0, 5): # loop range to stand in for each of the Persona Vulnerability dimensions of (Identity, Action, Time, Location & Motive)
+
+		randomBool = bool(random.getrandbits(1)) # if True, the "display" of vulerablility will be instantiated, if False, it will not. 
+
+		if (i == 0):
+			if randomBool == False:
+				id_Bool = "privacy:exposesIdentity \"false\"^^xsd:boolean ;"
+			else:
+				id_Bool = "privacy:exposesIdentity \"true\"^^xsd:boolean ;"
+		else:
+			pass
+
+
+		if (i == 1):
+			if randomBool == False:
+				act_Bool = "privacy:exposesAction \"false\"^^xsd:boolean ;"
+			else:
+				act_Bool = "privacy:exposesAction \"true\"^^xsd:boolean ;"
+		else:
+			pass
+
+		if (i == 2):
+			if randomBool == False:
+				ti_Bool = "privacy:exposesTime \"false\"^^xsd:boolean ;"
+			else:
+				ti_Bool = "privacy:exposesTime \"true\"^^xsd:boolean ;"
+		else:
+			pass
+
+		if (i == 3):
+			if randomBool == False:
+				lo_Bool = "privacy:exposesLocation \"false\"^^xsd:boolean ;"
+			else:
+				lo_Bool = "privacy:exposesLocation \"true\"^^xsd:boolean ;"
+		else:
+			pass
+
+		if (i == 4):
+			if randomBool == False:
+				mo_Bool = "privacy:exposesMotive \"false\"^^xsd:boolean ."
+			else:
+				mo_Bool = "privacy:exposesMotive \"true\"^^xsd:boolean ."
+		else:
+			pass
 
 
 	returnString = (
 		entityString+"\n"
 		"\t"+typeString+"\n"
 		"\t"+uidString+"\n"
-		"\t"+nameString+"\n\n"
+		"\t"+nameString+"\n"
+		"\t"+id_Bool+"\n"
+		"\t"+act_Bool+"\n"
+		"\t"+ti_Bool+"\n"
+		"\t"+lo_Bool+"\n"
+		"\t"+mo_Bool+"\n"
 		)
 
+	return(returnString)
+
+
+	'''
 	# The following is intended to randomly assign Identity, Action, Time, Location & Motive to Personas. An instantiated value here is indicative of 
 	#the persona having "vulnerability" of having this dimension collected on. 
 	# All of the outputs are appended to the large "ReturnString defined above."
@@ -300,7 +354,7 @@ def makeTriplesForPersona(UserID):
 					"\t"+mo_uidString+"\n\n")
 			else:
 				pass
-
+		'''
 
 	return(returnString)
 
@@ -459,12 +513,163 @@ def determineCollectionVectors(connection_details, database_name):
 	conn.add(stardog.content.File("collectionVectors_KB.ttl"))
 	conn.commit()
 
+def determinePersonaCompromise(connection_details, database_name):
+	
+	conn = stardog.Connection(database_name, **connection_details)
+	conn.begin()
+
+	### FOR SIGHT
+
+	## Sight to Identity (Sees Who)
+	seesWhoQuery = """
+		CONSTRUCT{
+			?Device sense:seesWho ?Persona
+			}
+		WHERE{
+			?Device sense:collects sense:Sight . 
+			?Persona privacy:exposesIdentity true .
+			?Device sense:deviceUser ?UID .
+			?Persona privacy:personaID ?UID
+			}
+	"""
+	seesWhoGraph = conn.graph(seesWhoQuery)
+
+	## Sight to Action (Sees What)
+	seesWhatQuery = """
+		CONSTRUCT{
+    		?Device sense:seesWhat ?Persona
+		}
+		WHERE{
+    		?Device sense:collects sense:Sight . 
+    		?Persona privacy:exposesAction true .
+    		?Device sense:deviceUser ?UID .
+    		?Persona privacy:personaID ?UID
+		}
+	"""
+	seesWhatGraph = conn.graph(seesWhatQuery)	
+
+	## Sight to motive (Sees Why)
+	seesWhyQuery = """
+		CONSTRUCT{
+    		?Device sense:seesWhy ?Persona
+		}
+		WHERE{
+		    ?Device sense:collects sense:Sight . 
+		    ?Persona privacy:exposesMotive true .
+		    ?Device sense:deviceUser ?UID .
+		    ?Persona privacy:personaID ?UID
+		}	
+	"""
+	seesWhyGraph = conn.graph(seesWhyQuery)	
+
+	## Sound to Identity (Hears Who)
+	hearsWhoQuery = """
+		CONSTRUCT{
+		    ?Device sense:hearsWho ?Persona
+		}
+		WHERE{
+		    ?Device sense:collects sense:Sound . 
+		    ?Persona privacy:exposesIdentity true .
+		    ?Device sense:deviceUser ?UID .
+		    ?Persona privacy:personaID ?UID
+		}
+	"""
+	hearsWhoGraph = conn.graph(hearsWhoQuery)	
+
+	## Sound to Action (Hears What)
+	hearsWhatQuery = """
+		CONSTRUCT{
+		    ?Device sense:hearsWhat ?Persona
+		}
+		WHERE{
+		    ?Device sense:collects sense:Sound . 
+		    ?Persona privacy:exposesAction true .
+		    ?Device sense:deviceUser ?UID .
+		    ?Persona privacy:personaID ?UID
+		}
+	"""
+	hearsWhatGraph = conn.graph(hearsWhatQuery)	
+
+
+	## Sound to Motive (Hears Why)
+	hearsWhyQuery = """
+		CONSTRUCT{
+		    ?Device sense:hearsWhy ?Persona
+		}
+		WHERE{
+		    ?Device sense:collects sense:Sound . 
+		    ?Persona privacy:exposesMotive true .
+		    ?Device sense:deviceUser ?UID .
+		    ?Persona privacy:personaID ?UID
+		}
+	"""
+	hearsWhyGraph = conn.graph(hearsWhyQuery)		
+
+		## Time to Time (Occurs When)
+	occursWhenQuery = """
+		CONSTRUCT{
+		    ?Device sense:occursWhen ?Persona
+		}
+		WHERE{
+		    ?Device sense:collects sense:Time . 
+		    ?Persona privacy:exposesTime true .
+		    ?Device sense:deviceUser ?UID .
+		    ?Persona privacy:personaID ?UID
+		}
+	"""
+	occursWhenGraph = conn.graph(occursWhenQuery)	
+
+		## Location to Location (Locates Where)
+	locatesWhereQuery = """
+		CONSTRUCT{
+		    ?Device sense:locatesWhere ?Persona
+		}
+		WHERE{
+		    ?Device sense:collects sense:Location . 
+		    ?Persona privacy:exposesLocation true .
+		    ?Device sense:deviceUser ?UID .
+		    ?Persona privacy:personaID ?UID
+		}
+	"""
+	locatesWhereGraph = conn.graph(locatesWhereQuery)	
+
+	#Merge all the query results into one entity. 
+	totalGraph = (seesWhoGraph + seesWhatGraph + seesWhyGraph + hearsWhoGraph + hearsWhatGraph + hearsWhyGraph + occursWhenGraph + locatesWhereGraph)
+
+	#decode the bytestream
+	decodedTotal = (totalGraph.decode("utf-8"))	
+
+	#remove full URIs & Query Prefixes, Replacing with shortened URIs (on upload to stardog the "https:\\" was triggering a new domain)
+	# & so removal was necessary for functionality. It also improves readability
+	cleanedTotal = decodedTotal.replace("<https://github.com/osullik/IoT-Privacy/blob/main/social_IOT_KB.ttl","social_IOT_KB:")
+	cleanedTotal = cleanedTotal.replace("> <https://github.com/osullik/IoT-Privacy/blob/main/senses.ttl"," sense:")
+	cleanedTotal = cleanedTotal.replace("> <https://github.com/osullik/IoT-Privacy/blob/main/privacy.ttl"," privacy:")
+	cleanedTotal = cleanedTotal.replace("Who>", "Who")	
+	cleanedTotal = cleanedTotal.replace("What>", "What")	
+	cleanedTotal = cleanedTotal.replace("When>", "When")	
+	cleanedTotal = cleanedTotal.replace("Where>", "Where")	
+	cleanedTotal = cleanedTotal.replace("Why>", "Why")		
+	cleanedTotal = cleanedTotal.replace("> ."," .")
+	#Add in clean prefixes to the start of the file. 
+	cleanedTotal = ("@prefix privacy: <https://github.com/osullik/IoT-Privacy/blob/main/privacy.ttl>.\n"
+		+"@prefix sense: <https://github.com/osullik/IoT-Privacy/blob/main/senses.ttl>.\n"
+		+"@prefix social_IOT_KB: <https://github.com/osullik/IoT-Privacy/blob/main/social_IOT_KB.ttl>.\n\n"
+		+cleanedTotal)
+
+	#Export the Collection Vectors to a File called "collectionVectors.ttl"
+	with open("personaCompromise_KB.ttl", "w") as cvOut:
+								cvOut.write(cleanedTotal)
+	
+	#Add the new triples to the data store. 						
+	conn.add(stardog.content.File("personaCompromise_KB.ttl"))
+	conn.commit()
 
 #Executes the function & puts the result into this deviceDict dictionary
 deviceDict = CreateDeviceDict()
 createKBTriples(deviceDict)
 createSocial_IOT_KB(connection_details, knowledgebase_name)
 determineCollectionVectors(connection_details, knowledgebase_name)
+determinePersonaCompromise(connection_details, knowledgebase_name)
 
 
 	

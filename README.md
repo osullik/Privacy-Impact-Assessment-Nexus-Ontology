@@ -39,8 +39,8 @@ privacy interrogatives.
 
 |              			| Identity (WHO) | Action (WHAT) | Time (WHEN) | Location (WHERE) | Motive (WHY) |
 |-----------------------|----------------|---------------|-------------|------------------|--------------|
-| Sight	        	    | seesWho 		 | seesWhat		 | 			   | 				  |				 |
-| Sound	        	    | hearsWho 		 | hearsWhat	 | 			   | 				  |				 |
+| Sight	        	    | seesWho 		 | seesWhat		 | 			   | 				  |	seesWhy		 |
+| Sound	        	    | hearsWho 		 | hearsWhat	 | 			   | 				  |	hearsWhy	 |
 | Time	        	    | 		 		 |				 | occursWhen  | 				  |				 |
 | Location        	    | 		 		 |				 | 			   | locatesWhere	  |				 |
 
