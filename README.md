@@ -8,10 +8,11 @@ The privacy namespace consists of two key entity groups: PrivacyTypes and Interr
 - These are derived from Finn's 2013 Paper "Seven Types of Privacy"
 - They describe the seven types of "privacy". I.e. the natural states that are vulnerable to being breached. 
 
-## INTERROGATIVES
+## PERSONAS
 - These are derived from the five key sensing dimensions: "Who, What, When, Where and Why". 
 - The Five sensing dimensions will link to how things can come to be known and will be the gateway to understanding privacy risk. For example, If a camera "Sees" someone at a particular place at a particular time, we can link that to WHO, WHEN and WHERE.
 - The privacy states will be vulnerable to "violation" when one or more of the interrogatives intersects with a privacy type
+- In the ontology, these are subclasses of a "persona" entity. For example, all Identities are part of a persona, but not all Personas have known identity. 
 
 ## INTERSECTION
 - Where an interrogative intersects with a privacy type, there is a risk of a privacy violation occuring. 
@@ -43,7 +44,9 @@ privacy interrogatives.
 | Time	        	    | 		 		 |				 | occursWhen  | 				  |				 |
 | Location        	    | 		 		 |				 | 			   | locatesWhere	  |				 |
 
-
+## INTERSECTION
+- Where a Persona Entity and a Device Entity overlap in userID we make an assertion that they are the one being threatened. There is room to extend this based on proximity to other users, but that will come on future work (though I note it is possible using the existing Social IoT Dataset)
+- Where a Persona and Device share a user ID, a check compares the Collection Vectors available to the Device, and the Persona Elements being projected by the individual. Where there is an equivalency (i.e. a "Compromises" sub-relationship (such as "seesWho" between "senses:Sight" and "privacy:Identity" that will be instantiated in the KB))
 
 ## THE DEVICE ENTITY
 - The Device entity is designed as a 'PortKey' (ontology bridge). It serves as the interface point for the abstraction layer of the privacy impact assessment distinct from the physical network or device. In this manner, a the extensibility of this ontology to others is maximised. 

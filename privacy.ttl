@@ -74,40 +74,40 @@ rdf:type rdfs:Class ;
 
 ### The following classes relate to the basic sensory dimensions: Who, What, When, Where and Why
 
-privacy:InterrogativeDimensions
+privacy:Persona
 	rdf:type rdfs:Class ;
 	rdfs:comment "Parent class for the five sensory dimensions" ;
-	rdfs:label "Sensory Dimensions".
+	rdfs:label "Persona".
 
 privacy:Identity
 	rdf:type rdfs:Class ;
 	rdfs:comment "The ability to determine WHO an individual is"^^xsd:string ;
 	rdfs:label "Identity (WHO)" ;
-	rdfs:subClassOf privacy:InterrogativeDimensions.
+	rdfs:subClassOf privacy:Persona.
 
 privacy:Action
 	rdf:type rdfs:Class ;
 	rdfs:comment "The ability to determine WHAT an individual has done"^^xsd:string ;
 	rdfs:label "Action (WHAT)" ;
-	rdfs:subClassOf privacy:InterrogativeDimensions.
+	rdfs:subClassOf privacy:Persona.
 
 privacy:Time 
 	rdf:type rdfs:Class ;
 	rdfs:comment "The ability to determine WHEN something occurs"^^xsd:string ;
 	rdfs:label "Time (WHEN)" ;
-	rdfs:subClassOf privacy:InterrogativeDimensions.
+	rdfs:subClassOf privacy:Persona.
 
 privacy:Location
 	rdf:type rdfs:Class ;
 	rdfs:comment "The ability to determine WHERE an individual is"^^xsd:string ;
 	rdfs:label "Location (WHERE)" ;
-	rdfs:subClassOf privacy:InterrogativeDimensions.
+	rdfs:subClassOf privacy:Persona.
 
 privacy:Motive
 	rdf:type rdfs:Class ;
 	rdfs:comment "The ability to determine WHY an individual does something. Here generally can only be determined if the confidentiality of their communications is breached, as someone telling someone else their motive is the closest that we are likely to get to understanding it"^^xsd:string ;
 	rdfs:label "Motive (WHY)" ;
-	rdfs:subClassOf privacy:InterrogativeDimensions.
+	rdfs:subClassOf privacy:Persona.
 
 
 #    ____    ____     ___    ____    _____   ____    _____   ___   _____   ____  
@@ -117,7 +117,20 @@ privacy:Motive
 #   |_|     |_| \_\  \___/  |_|     |_____| |_| \_\   |_|   |___| |_____| |____/ 
 #    
 
+### The following properties relate to describing the "Persona" entity. 
+privacy:personaID
+	rdf:type rdf:Property ; 
+	rdfs:comment "The unique identification number of a persona, derived from their digital persona. Could be a MAC Address, AdvertisingID etc"^^xsd:string ;
+	rdfs:label "Persona ID"^^xsd:string ;
+	rdfs:domain privacy:Persona ;
+	rdfs:range xsd:string .
 
+privacy:personaName
+	rdf:type rdf:Property ; 
+	rdfs:comment "The 'true name' of an individual persona"^^xsd:string ;
+	rdfs:label "Persona Name"^^xsd:string ;
+	rdfs:domain privacy:Persona ;
+	rdfs:range xsd:string .
 
 
 #    ____    _____   _          _      _____   ___    ___    _   _   ____    _   _   ___   ____    ____  
@@ -129,6 +142,13 @@ privacy:Motive
 
 ### The Following Relationships define the link from the interrogative dimension to the privacy type. 
 
+privacy:threatens
+	rdf:type rdfs:Property ; 
+	rdfs:comment "Parent class for all privacy risks"^^xsd:string ;
+	rdfs:label "What threatens the privacy type" ; 
+	rdfs:domain privacy:Persona ; 
+	rdfs:range privacy:PrivacyType .
+
 ## Relationships about IDENTITY (WHO)
 
 privacy:whoIs
@@ -136,49 +156,56 @@ privacy:whoIs
 	rdfs:comment "Identification of an individual impacts Personal Privacy"^^xsd:string ;
 	rdfs:label "Who is the individual impacted" ; 
 	rdfs:domain privacy:Identity ; 
-	rdfs:range privacy:PersonalPrivacy .
+	rdfs:range privacy:PersonalPrivacy ;
+	rdfs:subPropertyOf privacy:threatens .
 
 privacy:whoDid
 	rdf:type rdfs:Property ; 
 	rdfs:comment "Identification of an individual who undertook an action"^^xsd:string ;
 	rdfs:label "Who took the action" ; 
 	rdfs:domain privacy:Identity ; 
-	rdfs:range privacy:BehaviourAndActionPrivacy .
+	rdfs:range privacy:BehaviourAndActionPrivacy ;
+	rdfs:subPropertyOf privacy:threatens .
 
 privacy:whoSaid
 	rdf:type rdfs:Property ; 
 	rdfs:comment "Identification of an individual who was involved in a communication"^^xsd:string ;
 	rdfs:label "Who was involved the communication" ; 
 	rdfs:domain privacy:Identity ; 
-	rdfs:range privacy:CommunicationPrivacy .
+	rdfs:range privacy:CommunicationPrivacy ;
+	rdfs:subPropertyOf privacy:threatens .
 
 privacy:whoData
 	rdf:type rdfs:Property ; 
 	rdfs:comment "Identification of an individual's Data"^^xsd:string ;
 	rdfs:label "Who is the individual this Data is About" ; 
 	rdfs:domain privacy:Identity ; 
-	rdfs:range privacy:DataAndImagePrivacy .
+	rdfs:range privacy:DataAndImagePrivacy ;
+	rdfs:subPropertyOf privacy:threatens .
 
 privacy:whoThought
 	rdf:type rdfs:Property ; 
 	rdfs:comment "Identification of an individual who has a thought or feeling"^^xsd:string ;
 	rdfs:label "Who is the individual thinking this" ; 
 	rdfs:domain privacy:Identity ; 
-	rdfs:range privacy:ThoughtAndFeelingPrivacy .
+	rdfs:range privacy:ThoughtAndFeelingPrivacy ;
+	rdfs:subPropertyOf privacy:threatens .
 
 privacy:whoAt
 	rdf:type rdfs:Property ; 
 	rdfs:comment "Identification of an individual at a location."^^xsd:string ;
 	rdfs:label "Who is the individual at the location" ; 
 	rdfs:domain privacy:Identity ; 
-	rdfs:range privacy:LocationAndSpacePrivacy .
+	rdfs:range privacy:LocationAndSpacePrivacy ;
+	rdfs:subPropertyOf privacy:threatens .
 
 privacy:whoWith
 	rdf:type rdfs:Property ; 
 	rdfs:comment "Identification of an individual associating with other(s)"^^xsd:string ;
 	rdfs:label "Who is the individual associating with" ; 
 	rdfs:domain privacy:Identity ; 
-	rdfs:range privacy:AssociationPrivacy .
+	rdfs:range privacy:AssociationPrivacy ;
+	rdfs:subPropertyOf privacy:threatens .
 
 ## Relationships about Action (WHAT)
 
@@ -189,7 +216,8 @@ privacy:whatDid
 	rdfs:comment "An action committed"^^xsd:string ;
 	rdfs:label "What is the Action Committed" ; 
 	rdfs:domain privacy:Action ; 
-	rdfs:range privacy:BehaviourAndActionPrivacy .
+	rdfs:range privacy:BehaviourAndActionPrivacy ;
+	rdfs:subPropertyOf privacy:threatens .
 
 #No Action - Communication relationship defined. The fact a communication occured is assumed. Content of a message covered in "whySaid"
 
@@ -198,14 +226,16 @@ privacy:whatData
 	rdfs:comment "An Action's associated data"^^xsd:string ;
 	rdfs:label "What is the data for the Action" ; 
 	rdfs:domain privacy:Action ; 
-	rdfs:range privacy:DataAndImagePrivacy .
+	rdfs:range privacy:DataAndImagePrivacy ;
+	rdfs:subPropertyOf privacy:threatens .
 
 privacy:whatThought
 	rdf:type rdfs:Property ; 
 	rdfs:comment "The thought/feeling implied by an action (e.g. Punching someone indicates anger"^^xsd:string ;
 	rdfs:label "What is the Action's Sentiment" ; 
 	rdfs:domain privacy:Action ; 
-	rdfs:range privacy:ThoughtAndFeelingPrivacy .
+	rdfs:range privacy:ThoughtAndFeelingPrivacy ;
+	rdfs:subPropertyOf privacy:threatens .
 
 #No location / Space and Action relationship defined ("What At" is redundant to "where At")
 
@@ -219,49 +249,56 @@ privacy:whenIs
 	rdfs:comment "The time an individual is identified"^^xsd:string ;
 	rdfs:label "When is an individual identified" ; 
 	rdfs:domain privacy:Time ; 
-	rdfs:range privacy:PersonalPrivacy .
+	rdfs:range privacy:PersonalPrivacy ;
+	rdfs:subPropertyOf privacy:threatens .
 
 privacy:whenDid
 	rdf:type rdfs:Property ; 
 	rdfs:comment "The time an individual completed an action"^^xsd:string ;
 	rdfs:label "When is an individual acted" ; 
 	rdfs:domain privacy:Time ; 
-	rdfs:range privacy:BehaviourAndActionPrivacy .
+	rdfs:range privacy:BehaviourAndActionPrivacy ;
+	rdfs:subPropertyOf privacy:threatens .
 
 privacy:whenSaid
 	rdf:type rdfs:Property ; 
 	rdfs:comment "The time an individual sent a communication"^^xsd:string ;
 	rdfs:label "When is an individual communicated" ; 
 	rdfs:domain privacy:Time ; 
-	rdfs:range privacy:CommunicationPrivacy .
+	rdfs:range privacy:CommunicationPrivacy ;
+	rdfs:subPropertyOf privacy:threatens .
 
 privacy:whenData
 	rdf:type rdfs:Property ; 
 	rdfs:comment "The time associated with collected Data"^^xsd:string ;
 	rdfs:label "When is this data from" ; 
 	rdfs:domain privacy:Time ; 
-	rdfs:range privacy:DataAndImagePrivacy .
+	rdfs:range privacy:DataAndImagePrivacy ;
+	rdfs:subPropertyOf privacy:threatens .
 
 privacy:whenThought
 	rdf:type rdfs:Property ; 
 	rdfs:comment "The time an individual had a thought (note: likely inferred from message or conversation)."^^xsd:string ;
 	rdfs:label "When is an individual having a thought or feeling" ; 
 	rdfs:domain privacy:Time ; 
-	rdfs:range privacy:ThoughtAndFeelingPrivacy .
+	rdfs:range privacy:ThoughtAndFeelingPrivacy ;
+	rdfs:subPropertyOf privacy:threatens .
 
 privacy:whenAt
 	rdf:type rdfs:Property ; 
 	rdfs:comment "The time a location is at a location"^^xsd:string ;
 	rdfs:label "When is an individual is at a location" ; 
 	rdfs:domain privacy:Time ; 
-	rdfs:range privacy:LocationAndSpacePrivacy .
+	rdfs:range privacy:LocationAndSpacePrivacy ;
+	rdfs:subPropertyOf privacy:threatens .
 
 privacy:whenWith
 	rdf:type rdfs:Property ; 
 	rdfs:comment "The time an individual is associated with another"^^xsd:string ;
 	rdfs:label "When is an individual is Associated with another" ; 
 	rdfs:domain privacy:Time ; 
-	rdfs:range privacy:AssociationPrivacy .
+	rdfs:range privacy:AssociationPrivacy ;
+	rdfs:subPropertyOf privacy:threatens .
 
 ##Relationships about Location (WHERE):
 
@@ -270,14 +307,16 @@ privacy:whereIs
 	rdfs:comment "The Location an individual is identified"^^xsd:string ;
 	rdfs:label "Where is an individual identified" ; 
 	rdfs:domain privacy:Location ; 
-	rdfs:range privacy:PersonalPrivacy .
+	rdfs:range privacy:PersonalPrivacy ;
+	rdfs:subPropertyOf privacy:threatens .
 
 privacy:whereDid
 	rdf:type rdfs:Property ; 
 	rdfs:comment "The Location an individual committed an act"^^xsd:string ;
 	rdfs:label "Where did an action occur" ; 
 	rdfs:domain privacy:Location ; 
-	rdfs:range privacy:BehaviourAndActionPrivacy .
+	rdfs:range privacy:BehaviourAndActionPrivacy ;
+	rdfs:subPropertyOf privacy:threatens .
 
 
 privacy:whereSaid
@@ -285,7 +324,8 @@ privacy:whereSaid
 	rdfs:comment "The Location an individual was involved in a communication"^^xsd:string ;
 	rdfs:label "Where did an individual communicate" ; 
 	rdfs:domain privacy:Location ; 
-	rdfs:range privacy:CommunicationPrivacy .
+	rdfs:range privacy:CommunicationPrivacy ;
+	rdfs:subPropertyOf privacy:threatens .
 
 
 #no Location and Data&Image relationship defined. Possible to derive location from priori data but will capture that in the other areas. 
@@ -299,7 +339,8 @@ privacy:whereWith
 	rdfs:comment "The Location an individual associates with another"^^xsd:string ;
 	rdfs:label "Where is an individual Associating" ; 
 	rdfs:domain privacy:Location ; 
-	rdfs:range privacy:AssociationPrivacy .
+	rdfs:range privacy:AssociationPrivacy ;
+	rdfs:subPropertyOf privacy:threatens .
 
 
 ## Relationships about motives. 
@@ -313,7 +354,8 @@ privacy:whySaid
 	rdfs:comment "Motive of an individual is derived from their communication"^^xsd:string ;
 	rdfs:label "Why are they thinking / feeling based on what they communicated" ; 
 	rdfs:domain privacy:Motive ; 
-	rdfs:range privacy:CommunicationPrivacy .
+	rdfs:range privacy:CommunicationPrivacy ;
+	rdfs:subPropertyOf privacy:threatens .
 
 
 #no Motive - Data relationship defined. Difficult to infer motive from even aggregated data (Some classification models may be exceptions to this)
@@ -323,7 +365,8 @@ privacy:whyThought
 	rdfs:comment "The motive of an individual based on converation or observation"^^xsd:string ;
 	rdfs:label "Why is an individual doing something" ; 
 	rdfs:domain privacy:Motive ; 
-	rdfs:range privacy:ThoughtAndFeelingPrivacy .
+	rdfs:range privacy:ThoughtAndFeelingPrivacy ;
+	rdfs:subPropertyOf privacy:threatens .
 
 
 #no Motive - location relationship defined. Difficult to infer WHY someone is somehwere just from the fact they are there. 
