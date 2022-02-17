@@ -39,8 +39,8 @@ SELECT ?Vector ?Rel ?Dim  WHERE {?Rel rdfs:domain sense:CollectionVector .
 
 SELECT ?Vector ?Rel ?Dim  WHERE {?Rel rdfs:domain ?Vector . 
                                  ?Rel rdfs:range ?Dim
-                                 FILTER(isURI(?Rel) && STRSTARTS(STR(?Rel), STR(sense:)))
-                                 FILTER(isURI(?Vector) && STRSTARTS(STR(?Vector), STR(sense:)))
-                                 FILTER(isURI(?Dim) && STRSTARTS(STR(?Dim), STR(privacy:)))
+                                 FILTER(isURI(?Rel) && STRSTARTS(STR(?Rel), STR(sense:))) #show only the sense namespace relationships
+                                 FILTER(isURI(?Vector) && STRSTARTS(STR(?Vector), STR(sense:))) #show only the sense namespace CVs
+                                 FILTER(isURI(?Dim) && STRSTARTS(STR(?Dim), STR(privacy:))) #show only the privacy namespace Dimensions
                                  } #Returns all parent & Child Classes (doubles up)
                         
