@@ -164,7 +164,7 @@ sense:collects
 sense:compromises
 	rdf:type rdfs:Property;
 	rdfs:comment"The overarching relationship between a collection vector and sensory diemnsions"^^xsd:string ; 
-	rdfs:label"Feeds"^^xsd:string ;
+	rdfs:label"compromises"^^xsd:string ;
 	rdfs:domain sense:CollectionVector ; 
 	rdfs:range privacy:Persona .
 
@@ -174,7 +174,7 @@ sense:seesWho
 	rdfs:label"Who the sight sensor sees"^^xsd:string ;
 	rdfs:domain sense:Sight ; 
 	rdfs:range privacy:Identity ;
-	rdfs:subPropertyOf sense:feeds .	
+	rdfs:subPropertyOf sense:compromises .	
 
 sense:seesWhat
 	rdf:type rdfs:Property;
@@ -182,7 +182,7 @@ sense:seesWhat
 	rdfs:label"What the sight sensor sees"^^xsd:string ;
 	rdfs:domain sense:Sight ; 
 	rdfs:range privacy:Action ;
-	rdfs:subPropertyOf sense:feeds .
+	rdfs:subPropertyOf sense:compromises .
 
 sense:seesWhy
 	rdf:type rdfs:Property;
@@ -190,7 +190,7 @@ sense:seesWhy
 	rdfs:label"The motive of the persona collected by the sight vector"^^xsd:string ;
 	rdfs:domain sense:Sight ; 
 	rdfs:range privacy:Motive ;
-	rdfs:subPropertyOf sense:feeds .
+	rdfs:subPropertyOf sense:compromises .
 
 sense:hearsWho 
 	rdf:type rdfs:Property;
@@ -198,7 +198,7 @@ sense:hearsWho
 	rdfs:label"Who the sound sensor hears"^^xsd:string ;
 	rdfs:domain sense:Sound ; 
 	rdfs:range privacy:Identity ;
-	rdfs:subPropertyOf sense:feeds .
+	rdfs:subPropertyOf sense:compromises .
 
 sense:hearsWhat
 	rdf:type rdfs:Property;
@@ -206,7 +206,7 @@ sense:hearsWhat
 	rdfs:label"What the sound sensor hears"^^xsd:string ;
 	rdfs:domain sense:Sound ; 
 	rdfs:range privacy:Action ;
-	rdfs:subPropertyOf sense:feeds .
+	rdfs:subPropertyOf sense:compromises .
 
 sense:hearsWhy
 	rdf:type rdfs:Property;
@@ -214,7 +214,7 @@ sense:hearsWhy
 	rdfs:label"The motive of the persona collected by the sound Vector"^^xsd:string ;
 	rdfs:domain sense:Sound ; 
 	rdfs:range privacy:Motive ;
-	rdfs:subPropertyOf sense:feeds .
+	rdfs:subPropertyOf sense:compromises .
 
 sense:locatesWhere
 	rdf:type rdfs:Property;
@@ -222,7 +222,7 @@ sense:locatesWhere
 	rdfs:label"Where the locator locates"^^xsd:string ;
 	rdfs:domain sense:Location ; 
 	rdfs:range privacy:Location ;
-	rdfs:subPropertyOf sense:feeds .
+	rdfs:subPropertyOf sense:compromises .
 
 sense:occursWhen
 	rdf:type rdfs:Property;
@@ -230,6 +230,6 @@ sense:occursWhen
 	rdfs:label"When the vector is collected"^^xsd:string ;
 	rdfs:domain sense:Time ; 
 	rdfs:range privacy:Time ;
-	rdfs:subPropertyOf sense:feeds .
+	rdfs:subPropertyOf sense:compromises .
 
 

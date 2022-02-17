@@ -1,0 +1,86 @@
+#Comptency Questions: 
+
+
+# What privacy risks is an individual vulnerable to? 
+
+SELECT ?Name ?PrivacyRisk
+WHERE{
+    ?Persona privacy:threatens ?PrivacyRisk .
+    ?Persona privacy:personaName ?Name 
+}
+
+
+# Determine who has the most privacy Violations
+SELECT ?Name (COUNT (?PrivacyRisk) as ?RiskCount)
+WHERE{
+    ?Persona privacy:threatens ?PrivacyRisk .
+    ?Persona privacy:personaName ?Name 
+}
+GROUP BY ?Name
+ORDER BY DESC(?RiskCount)
+
+
+# Determine which type of privacy violation is the most common. 
+SELECT ?PrivacyRisk (COUNT (?Name) as ?NameCount)
+WHERE{
+    ?Persona privacy:threatens ?PrivacyRisk .
+    ?Persona privacy:personaName ?Name 
+    }
+GROUP BY ?PrivacyRisk
+ORDER BY DESC(?NameCount)
+
+
+# Determine what device type is most prolific
+SELECT ?DeviceType (COUNT(?Name) as ?UserCount)
+WHERE{
+    ?Device sense:deviceType ?DeviceType .
+    ?Device sense:deviceUser ?UID .
+    ?Persona privacy:personaID ?UID .
+    ?Persona privacy:personaName ?Name
+}
+GROUP BY ?DeviceType
+ORDER BY DESC(?UserCount)
+
+
+# Determine which Privacy type has the most associated devices (note: many users have more than one device)
+SELECT ?PrivacyRisk (COUNT(?DeviceType) as ?DeviceCount)
+WHERE{
+    ?Device sense:deviceType ?DeviceType .
+    ?Device sense:deviceUser ?UID .
+    ?Persona privacy:personaID ?UID .
+    ?Persona privacy:threatens ?PrivacyRisk 
+
+}
+GROUP BY ?PrivacyRisk
+ORDER BY DESC(?DeviceCount)
+
+
+# Determine which Device type has the most associated PrivacyImpacts (Note: one device may pose multiple risks)
+SELECT ?DeviceType (COUNT(?PrivacyRisk ) as ?RiskCount)
+WHERE{
+    ?Device sense:deviceType ?DeviceType .
+    ?Device sense:deviceUser ?UID .
+    ?Persona privacy:personaID ?UID .
+    ?Persona privacy:threatens ?PrivacyRisk 
+
+}
+GROUP BY ?DeviceType
+ORDER BY DESC(?RiskCount)
+
+# Determine how Many Devices have Cameras
+SELECT ?DeviceType (COUNT(?Device) as ?DeviceCount)
+WHERE{
+    ?Device sense:deviceType ?DeviceType .
+    ?Device sense:collects sense:Sight
+
+}
+GROUP BY ?DeviceType
+ORDER BY DESC(?DeviceCount)
+
+# Determine what kinds of devices have cameras
+SELECT DISTINCT ?DeviceType 
+WHERE{
+    ?Device sense:deviceType ?DeviceType .
+    ?Device sense:collects sense:Sight
+
+}
