@@ -1,7 +1,7 @@
-import csv, stardog, os.path, json, pandas as pd, io 
+import csv, stardog, os.path, io 
 from rdflib import Graph
 import names #used to generate random names to use in the Knowledgebase 
-import random
+import random #used to randomly assign vulnerabilites 
 
 #details for Stardog DB Connection
 connection_details = {
@@ -54,11 +54,12 @@ def ImportData():
 
 	return(object_description, object_profile, private_static_devices, private_mobile_devices)
 
-
 def getRelevantItems(fullServiceList):
-	#This function takes the list of device types & services from the object_profile input and trims the list
-	#to only the relevant values (1-9) of availiable services. "Apps" are deliberately discarded, and the 
-	#device type is contained in the devicesDict dictionary the information is being passed into in "CreateDeviceDict" function.
+	#This function takes the list of device types & services from the object_profile input and trims the list to only the relevant 
+	#values (1-9) of availiable services. "Apps" are deliberately discarded, and the device type is contained in the devicesDict dictionary 
+	#the information is being passed into in "CreateDeviceDict" function.
+
+
 	returnList = []
 
 	#index rande here determined by the "services" items & excluding the applicaiton items. 
@@ -94,19 +95,39 @@ def CreateDeviceDict():
 	for deviceType in object_profile:
 		servicesDict[deviceType[0]] = getRelevantItems(deviceType)
 
+	deviceTypeDict = {
+						"1":"Smartphone",
+						"2":"Car",
+						"3":"Tablet",
+						"4":"SmartFitness",
+						"5":"SmartWatch",
+						"6":"PersonalComputer",
+						"7":"Printer",
+						"8":"HomeSensors",
+						"9":"PointOfInterest",
+						"10":"EnvironmentAndWeather",
+						"11":"Transportation",
+						"12":"Indicator",
+						"13":"GarbageTruck",
+						"14":"StreetLight",
+						"15":"Parking",
+						"16":"Alarms"				
+					}
+
 	# Generates the dictionary of key information from the dataset to feed the knowledgeBase creation. 
+	#Note that the device Type is used as the Key in the servicesDict as the services are similar across device type. 
 	count = 0 # a workaround to remove the header information, that was breaking the RDF Triple generation downstream by skipping row 0. 
 	for row in object_description:
 		if count == 0:
 			pass 
 		else:
-			devicesDict[row[0]] = {"deviceType": row[2] , "userID":row[1], "deviceServices":servicesDict[row[2]]}
+			devicesDict[row[0]] = {"deviceType": deviceTypeDict[row[2]] , "userID":row[1], "deviceServices":servicesDict[row[2]]}
 		count+= 1
 		
 
 		#Used to make testing more efficient
-		if count >1000: #REMOVE ME AFTER TESTING
-			break
+		#if count >1000: #REMOVE ME AFTER TESTING
+		#	break
 
 
 
@@ -321,6 +342,12 @@ def createSocial_IOT_KB(connection_details, database_name):
 	conn.commit()
 
 def createTTLFile(deviceTriples, personaNames, firstTimeFlag):
+	#The purpose of this function is to combine the device triples and the persona triples into a Turtle syntax
+	#RDF file that is used to instantiate the Social IoT Knowledgebase. 
+	#It is called iteratively for each Device & user, and accepts a TTL formatted Device entity String, 
+	#A TTL Formatted Persona entity string and a boolen to determine if this is the first time through the loop
+	#or not. If first time, it'll drop any old files & replace with the new. 
+	#The file returns no value, but does output the Device and Persona details to a TTL file on disk.
 	if firstTimeFlag == True:
 		if os.path.isfile("./social_IOT_KB.ttl") == True:
 			os.remove("./social_IOT_KB.ttl")
@@ -733,6 +760,9 @@ def determinePrivacyImpacts(connection_details, database_name):
 	cleanedTotal = cleanedTotal.replace("When>", "When")	
 	cleanedTotal = cleanedTotal.replace("Where>", "Where")	
 	cleanedTotal = cleanedTotal.replace("Why>", "Why")
+	cleanedTotal = cleanedTotal.replace("<https://github.com/osullik/IoT-Privacy/blob/main/privacy.ttlPersonalPrivacy>", "\nprivacy:PersonalPrivacy .")
+	cleanedTotal = cleanedTotal.replace("<https://github.com/osullik/IoT-Privacy/blob/main/privacy.ttlCommunicationPrivacy>", "\nprivacy:CommunicationPrivacy .")
+	cleanedTotal = cleanedTotal.replace("<https://github.com/osullik/IoT-Privacy/blob/main/privacy.ttlBehaviourAndActionPrivacy>", "\nprivacy:BehaviourAndActionPrivacy .")		
 	cleanedTotal = cleanedTotal.replace("<https://github.com/osullik/IoT-Privacy/blob/main/privacy.ttlThoughtAndFeelingPrivacy>", "\nprivacy:ThoughtAndFeelingPrivacy .")
 	cleanedTotal = cleanedTotal.replace("<https://github.com/osullik/IoT-Privacy/blob/main/privacy.ttlLocationAndSpacePrivacy>", "\nprivacy:LocationAndSpacePrivacy .")
 	cleanedTotal = cleanedTotal.replace("<https://github.com/osullik/IoT-Privacy/blob/main/privacy.ttlAssociatonPrivacy", "\nprivacy:AssociatonPrivacy .")	
@@ -777,7 +807,7 @@ def determinePrivacyImpacts(connection_details, database_name):
 	conn.commit()
 
 
-#Executes the function & puts the result into this deviceDict dictionary
+#Executes the functions
 deviceDict = CreateDeviceDict()
 createKBTriples(deviceDict)
 createSocial_IOT_KB(connection_details, knowledgebase_name)

@@ -1,7 +1,7 @@
 ############
 # author: Kent O'Sullivan
-# purpose: The privacy ontology is a stub designed to allow for the development of an IoT ontology.
-# Last Updated: 02 Nov 21
+# purpose: The privacy namespace is a stub designed to allow for the development of an IoT ontology.
+# Last Updated: 16 Feb 22
 ############
 
 @prefix privacy: <https://github.com/osullik/IoT-Privacy/blob/main/privacy.ttl>.
@@ -42,7 +42,7 @@ privacy:BehaviourAndActionPrivacy
 	rdfs:subClassOf privacy:PrivacyType.
 
 privacy:CommunicationPrivacy
-rdf:type rdfs:Class ;
+rdf:type rdfs:Class ; 
 	rdfs:comment "Privacy of communication aims to avoid the interception of communications, including mail interception, the use of bugs, directional microphones, telephone or wireless communication interception or recording and access to e-mail messages."^^xsd:string ;
 	rdfs:label "Privacy of Communications"^^xsd:string ;
 	rdfs:subClassOf privacy:PrivacyType.
@@ -153,170 +153,3 @@ privacy:threatens
 	rdfs:label "What threatens the privacy type" ; 
 	rdfs:domain privacy:Persona ; 
 	rdfs:range privacy:PrivacyType .
-
-## Relationships about IDENTITY (WHO)
-
-privacy:whoIs
-	rdf:type rdfs:Property ; 
-	rdfs:comment "Identification of an individual impacts Personal Privacy"^^xsd:string ;
-	rdfs:label "Who is the individual impacted" ; 
-	rdfs:domain privacy:Identity ; 
-	rdfs:range privacy:PersonalPrivacy ;
-	rdfs:subPropertyOf privacy:threatens .
-
-privacy:whoDid
-	rdf:type rdfs:Property ; 
-	rdfs:comment "Identification of an individual who undertook an action"^^xsd:string ;
-	rdfs:label "Who took the action" ; 
-	rdfs:domain privacy:Identity ; 
-	rdfs:range privacy:BehaviourAndActionPrivacy ;
-	rdfs:subPropertyOf privacy:threatens .
-
-privacy:whoSaid
-	rdf:type rdfs:Property ; 
-	rdfs:comment "Identification of an individual who was involved in a communication"^^xsd:string ;
-	rdfs:label "Who was involved the communication" ; 
-	rdfs:domain privacy:Identity ; 
-	rdfs:range privacy:CommunicationPrivacy ;
-	rdfs:subPropertyOf privacy:threatens .
-
-privacy:whoData
-	rdf:type rdfs:Property ; 
-	rdfs:comment "Identification of an individual's Data"^^xsd:string ;
-	rdfs:label "Who is the individual this Data is About" ; 
-	rdfs:domain privacy:Identity ; 
-	rdfs:range privacy:DataAndImagePrivacy ;
-	rdfs:subPropertyOf privacy:threatens .
-
-privacy:whoThought
-	rdf:type rdfs:Property ; 
-	rdfs:comment "Identification of an individual who has a thought or feeling"^^xsd:string ;
-	rdfs:label "Who is the individual thinking this" ; 
-	rdfs:domain privacy:Identity ; 
-	rdfs:range privacy:ThoughtAndFeelingPrivacy ;
-	rdfs:subPropertyOf privacy:threatens .
-
-privacy:whoAt
-	rdf:type rdfs:Property ; 
-	rdfs:comment "Identification of an individual at a location."^^xsd:string ;
-	rdfs:label "Who is the individual at the location" ; 
-	rdfs:domain privacy:Identity ; 
-	rdfs:range privacy:LocationAndSpacePrivacy ;
-	rdfs:subPropertyOf privacy:threatens .
-
-privacy:whoWith
-	rdf:type rdfs:Property ; 
-	rdfs:comment "Identification of an individual associating with other(s)"^^xsd:string ;
-	rdfs:label "Who is the individual associating with" ; 
-	rdfs:domain privacy:Identity ; 
-	rdfs:range privacy:AssociationPrivacy ;
-	rdfs:subPropertyOf privacy:threatens .
-
-## Relationships about Action (WHAT)
-
-#No PersonalPrivacy - Action relationship defined ("What is" seems a bit existential)
-
-privacy:whatDid
-	rdf:type rdfs:Property ; 
-	rdfs:comment "An action committed"^^xsd:string ;
-	rdfs:label "What is the Action Committed" ; 
-	rdfs:domain privacy:Action ; 
-	rdfs:range privacy:BehaviourAndActionPrivacy ;
-	rdfs:subPropertyOf privacy:threatens .
-
-privacy:whatSaid
-	rdf:type rdfs:Property ; 
-	rdfs:comment "Identification of the content of a communication"^^xsd:string ;
-	rdfs:label "What was the content of the communication" ; 
-	rdfs:domain privacy:Action ; 
-	rdfs:range privacy:CommunicationPrivacy ;
-	rdfs:subPropertyOf privacy:threatens .
-
-privacy:whatData
-	rdf:type rdfs:Property ; 
-	rdfs:comment "An Action's associated data"^^xsd:string ;
-	rdfs:label "What is the data for the Action" ; 
-	rdfs:domain privacy:Action ; 
-	rdfs:range privacy:DataAndImagePrivacy ;
-	rdfs:subPropertyOf privacy:threatens .
-
-privacy:whatThought
-	rdf:type rdfs:Property ; 
-	rdfs:comment "The thought/feeling implied by an action (e.g. Punching someone indicates anger"^^xsd:string ;
-	rdfs:label "What is the Action's Sentiment" ; 
-	rdfs:domain privacy:Action ; 
-	rdfs:range privacy:ThoughtAndFeelingPrivacy ;
-	rdfs:subPropertyOf privacy:threatens .
-
-#No location / Space and Action relationship defined ("What At" is redundant to "where At")
-
-#No association and Action relationship defined ("What With" is just the conjunction of "WhoWith" and "WhatDid")
-
-
-##Relationships about time (WHEN): 
-
-privacy:whenSaid
-	rdf:type rdfs:Property ; 
-	rdfs:comment "The time an individual sent a communication"^^xsd:string ;
-	rdfs:label "When is an individual communicated" ; 
-	rdfs:domain privacy:Time ; 
-	rdfs:range privacy:CommunicationPrivacy ;
-	rdfs:subPropertyOf privacy:threatens .
-
-privacy:whenAt
-	rdf:type rdfs:Property ; 
-	rdfs:comment "The time a location is at a location"^^xsd:string ;
-	rdfs:label "When is an individual is at a location" ; 
-	rdfs:domain privacy:Time ; 
-	rdfs:range privacy:LocationAndSpacePrivacy ;
-	rdfs:subPropertyOf privacy:threatens .
-
-privacy:whenWith
-	rdf:type rdfs:Property ; 
-	rdfs:comment "The time an individual is associated with another"^^xsd:string ;
-	rdfs:label "When is an individual is Associated with another" ; 
-	rdfs:domain privacy:Time ; 
-	rdfs:range privacy:AssociationPrivacy ;
-	rdfs:subPropertyOf privacy:threatens .
-
-##Relationships about Location (WHERE):
-
-privacy:whereAt
-	rdf:type rdfs:Property ; 
-	rdfs:comment "The location of a location"^^xsd:string ;
-	rdfs:label "Where a location is located (i.e. the location is known)" ; 
-	rdfs:domain privacy:Location ; 
-	rdfs:range privacy:LocationAndSpacePrivacy ;
-	rdfs:subPropertyOf privacy:threatens .
-
-privacy:whereWith
-	rdf:type rdfs:Property ; 
-	rdfs:comment "The location an individual is associated with another"^^xsd:string ;
-	rdfs:label "Where is an individual is Associated with another" ; 
-	rdfs:domain privacy:Location ; 
-	rdfs:range privacy:AssociationPrivacy ;
-	rdfs:subPropertyOf privacy:threatens .
-
-
-## Relationships about motives. 
-
-#No Motive - Personal Privacy relationship defined. "Cogito Ergo Sum".
-
-#No Motive - behaviour relationship defined. Extremely difficult to infer motive as an observer. 
-
-#No Motive - communication relationship defined. Extremely difficult to infer WHY someone communicates, just what. 
-
-#no Motive - Data relationship defined. Difficult to infer motive from even aggregated data (Some classification models may be exceptions to this)
-
-privacy:whyThought
-	rdf:type rdfs:Property ; 
-	rdfs:comment "The motive of an individual based on converation or observation"^^xsd:string ;
-	rdfs:label "Why is an individual doing something" ; 
-	rdfs:domain privacy:Motive ; 
-	rdfs:range privacy:ThoughtAndFeelingPrivacy ;
-	rdfs:subPropertyOf privacy:threatens .
-
-
-#no Motive - location relationship defined. Difficult to infer WHY someone is somehwere just from the fact they are there. 
-
-#no Motive-Association relationship defined. Difficult to infer WHY someone is a member of a group without them telling you. 

@@ -24,6 +24,7 @@ dependencies:
     - contextlib2==21.6.0
     - idna==3.3
     - isodate==0.6.1
+    - names==0.3.0
     - numpy==1.22.2
     - pandas==1.4.1
     - pyparsing==3.0.7
