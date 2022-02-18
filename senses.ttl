@@ -1,7 +1,7 @@
 ############
 # author: Kent O'Sullivan
-# purpose: The senses ontology is a stub designed to allow for the development of an IoT ontology.
-# Last Updated: 25 Jan 22
+# purpose: The sense namespaceis a stub designed to allow for the development of an IoT ontology.
+# Last Updated: 16 FEB 22
 ############
 
 @prefix privacy: <https://github.com/osullik/IoT-Privacy/blob/main/privacy.ttl>.
@@ -62,20 +62,6 @@ sense:Location
 	rdfs:comment "Encompasses all things that can be located"^^xsd:string ;
 	rdfs:label "Location"^^xsd:string ;
 	rdfs:subClassOf sense:CollectionVector.
-
-### Sensory Subclasses
-
-sense:Pictures
-	rdf:type rdfs:Class ;
-	rdfs:comment "Things that are seen as objects or entites"^^xsd:string ;
-	rdfs:label "Pictures"^^xsd:string ;
-	rdfs:subClassOf sense:Sight.
-
-sense:Words
-	rdf:type rdfs:Class ;
-	rdfs:comment "Things that are seen as words or language"^^xsd:string ;
-	rdfs:label "Words"^^xsd:string ;
-	rdfs:subClassOf sense:Sight.
 
 
 #    ____    ____     ___    ____    _____   ____    _____   ___   _____   ____  

@@ -1,7 +1,7 @@
 import csv, stardog, os.path, io 
 from rdflib import Graph
 import names #used to generate random names to use in the Knowledgebase 
-import random
+import random #used to randomly assign vulnerabilites 
 
 #details for Stardog DB Connection
 connection_details = {
@@ -54,11 +54,12 @@ def ImportData():
 
 	return(object_description, object_profile, private_static_devices, private_mobile_devices)
 
-
 def getRelevantItems(fullServiceList):
-	#This function takes the list of device types & services from the object_profile input and trims the list
-	#to only the relevant values (1-9) of availiable services. "Apps" are deliberately discarded, and the 
-	#device type is contained in the devicesDict dictionary the information is being passed into in "CreateDeviceDict" function.
+	#This function takes the list of device types & services from the object_profile input and trims the list to only the relevant 
+	#values (1-9) of availiable services. "Apps" are deliberately discarded, and the device type is contained in the devicesDict dictionary 
+	#the information is being passed into in "CreateDeviceDict" function.
+
+
 	returnList = []
 
 	#index rande here determined by the "services" items & excluding the applicaiton items. 
@@ -341,6 +342,12 @@ def createSocial_IOT_KB(connection_details, database_name):
 	conn.commit()
 
 def createTTLFile(deviceTriples, personaNames, firstTimeFlag):
+	#The purpose of this function is to combine the device triples and the persona triples into a Turtle syntax
+	#RDF file that is used to instantiate the Social IoT Knowledgebase. 
+	#It is called iteratively for each Device & user, and accepts a TTL formatted Device entity String, 
+	#A TTL Formatted Persona entity string and a boolen to determine if this is the first time through the loop
+	#or not. If first time, it'll drop any old files & replace with the new. 
+	#The file returns no value, but does output the Device and Persona details to a TTL file on disk.
 	if firstTimeFlag == True:
 		if os.path.isfile("./social_IOT_KB.ttl") == True:
 			os.remove("./social_IOT_KB.ttl")

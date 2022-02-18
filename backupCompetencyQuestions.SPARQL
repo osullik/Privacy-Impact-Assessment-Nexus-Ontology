@@ -84,3 +84,205 @@ WHERE{
     ?Device sense:collects sense:Sight
 
 }
+
+# Determine who is vulnerable to a given privacy violation
+SELECT DISTINCT ?Name
+WHERE{
+    ?Device sense:deviceUser ?UID .
+    ?Persona privacy:personaID ?UID .
+    ?Persona privacy:personaName ?Name .
+    ?Persona privacy:threatens privacy:PersonalPrivacy
+
+}
+
+# Determine how many vectors each person is vulnerable to
+SELECT (COUNT(?Vector) as ?VectorCount) ?Name
+
+    WHERE{
+        ?Persona privacy:personaID ?UID . 
+        ?Device sense:deviceUser ?UID . 
+        ?Persona privacy:personaName ?Name .
+        ?Device sense:collects ?Vector
+    }
+    GROUP BY ?Name
+    ORDER BY DESC(?VectorCount)
+
+
+# Determine how many vectors each person is vulnerable to, and how many of each vector they are at risk to
+SELECT ?Name ?NumberofDevices ?CollectionVectors ?SightVectors ?SoundVectors ?TimeVectors ?LocationVectors
+    WHERE{
+
+        {
+            SELECT (COUNT(sense:Sight) as ?SightVectors) ?Name
+
+            WHERE{
+            ?Persona privacy:personaID ?UID . 
+            ?Device sense:deviceUser ?UID . 
+            ?Persona privacy:personaName ?Name .
+            ?Device sense:collects sense:Sight
+            }
+            GROUP BY ?Name
+        } 
+
+        {
+            SELECT (COUNT(sense:Sound) as ?SoundVectors) ?Name
+
+            WHERE{
+            ?Persona privacy:personaID ?UID . 
+            ?Device sense:deviceUser ?UID . 
+            ?Persona privacy:personaName ?Name .
+            ?Device sense:collects sense:Sound
+            }
+            GROUP BY ?Name
+        }    
+
+                {
+            SELECT (COUNT(sense:Time) as ?TimeVectors) ?Name
+
+            WHERE{
+            ?Persona privacy:personaID ?UID . 
+            ?Device sense:deviceUser ?UID . 
+            ?Persona privacy:personaName ?Name .
+            ?Device sense:collects sense:Time
+            }
+            GROUP BY ?Name
+        }    
+
+                {
+            SELECT (COUNT(sense:Location) as ?LocationVectors) ?Name
+
+            WHERE{
+            ?Persona privacy:personaID ?UID . 
+            ?Device sense:deviceUser ?UID . 
+            ?Persona privacy:personaName ?Name .
+            ?Device sense:collects sense:Location
+            }
+            GROUP BY ?Name
+        }    
+
+               {
+            SELECT (COUNT(?Vector) as ?CollectionVectors) ?Name
+
+            WHERE{
+            ?Persona privacy:personaID ?UID . 
+            ?Device sense:deviceUser ?UID . 
+            ?Persona privacy:personaName ?Name .
+            ?Device sense:collects ?Vector
+            }
+            GROUP BY ?Name
+            ORDER BY DESC(?CollectionVectors)
+        }    
+
+                        {
+            SELECT (COUNT(?Device) as ?NumberofDevices) ?Name
+
+            WHERE{
+            ?Persona privacy:personaID ?UID . 
+            ?Device sense:deviceUser ?UID . 
+            ?Persona privacy:personaName ?Name .
+            }
+            GROUP BY ?Name
+        }             
+    }
+               
+
+
+# Determine how many Vulnerabilites each person is exposing, and how many of each type
+SELECT ?Name ?NumberofDevices ?CompromiseVulnerabilities ?IdentityVulnerabilites ?ActionVulnerabilites ?TimeVulnerabilities ?LocationVulnerabilities ?MotiveVulnerabilities
+    WHERE{
+
+               {
+            SELECT (COUNT(?Persona) as ?CompromiseVulnerabilities) ?Name
+
+            WHERE{
+            ?Persona privacy:personaID ?UID . 
+            ?Device sense:deviceUser ?UID . 
+            ?Persona privacy:personaName ?Name .
+            
+            {?Persona privacy:exposesIdentity true}
+            UNION
+            {?Persona privacy:exposesAction true}
+            UNION
+            {?Persona privacy:exposesTime true}
+            UNION
+            {?Persona privacy:exposesLocation true}
+            UNION
+            {?Persona privacy:exposesMotive true}
+            }
+            GROUP BY ?Name
+            ORDER BY DESC(?CompromiseVulnerabilities)
+        }    
+
+        {
+            SELECT (COUNT(privacy:exposesIdentity) as ?IdentityVulnerabilites) ?Name
+
+            WHERE{
+            ?Persona privacy:personaID ?UID . 
+            ?Device sense:deviceUser ?UID . 
+            ?Persona privacy:personaName ?Name .
+            ?Persona privacy:exposesIdentity true
+            }
+            GROUP BY ?Name
+        } 
+
+        {
+            SELECT (COUNT(privacy:exposesAction) as ?ActionVulnerabilites) ?Name
+
+            WHERE{
+            ?Persona privacy:personaID ?UID . 
+            ?Device sense:deviceUser ?UID . 
+            ?Persona privacy:personaName ?Name .
+            ?Persona privacy:exposesAction true
+            }
+            GROUP BY ?Name
+        }    
+
+        {
+            SELECT (COUNT(privacy:exposesTime) as ?TimeVulnerabilities) ?Name
+
+            WHERE{
+            ?Persona privacy:personaID ?UID . 
+            ?Device sense:deviceUser ?UID . 
+            ?Persona privacy:personaName ?Name .
+            ?Persona privacy:exposesTime true
+            }
+            GROUP BY ?Name
+        }  
+
+        {
+            SELECT (COUNT(privacy:exposesLocation) as ?LocationVulnerabilities) ?Name
+
+            WHERE{
+            ?Persona privacy:personaID ?UID . 
+            ?Device sense:deviceUser ?UID . 
+            ?Persona privacy:personaName ?Name .
+            ?Persona privacy:exposesLocation true
+            }
+            GROUP BY ?Name
+        } 
+
+        {
+            SELECT (COUNT(privacy:exposesMotive) as ?MotiveVulnerabilities) ?Name
+
+            WHERE{
+            ?Persona privacy:personaID ?UID . 
+            ?Device sense:deviceUser ?UID . 
+            ?Persona privacy:personaName ?Name .
+            ?Persona privacy:exposesMotive true
+            }
+            GROUP BY ?Name
+        }   
+
+                {
+            SELECT (COUNT(?Device) as ?NumberofDevices) ?Name
+
+            WHERE{
+            ?Persona privacy:personaID ?UID . 
+            ?Device sense:deviceUser ?UID . 
+            ?Persona privacy:personaName ?Name .
+            }
+            GROUP BY ?Name
+        }               
+
+    }
+        
