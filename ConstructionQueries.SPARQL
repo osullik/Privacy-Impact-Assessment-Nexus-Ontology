@@ -1,0 +1,90 @@
+#ThreatenComms
+
+CONSTRUCT{
+    ?Persona privacy:threatens privacy:CommunicationPrivacy
+}
+WHERE{
+    ?Device sense:deviceUser ?UID . 
+    ?Persona privacy:personaID ?UID .
+    ?Device sense:hearsWho ?Persona .
+    ?Device sense:hearsWhat ?Persona .
+    ?Device sense:occursWhen ?Persona 
+}
+
+
+#Threaten Association
+CONSTRUCT{
+    ?Persona privacy:threatens privacy:AssociatonPrivacy
+}
+WHERE{
+    ?Device sense:deviceUser ?UID . 
+    ?Persona privacy:personaID ?UID .
+    ?Device sense:locatesWhere ?Persona .
+    ?Device sense:occursWhen ?Persona .
+    
+    {?Device sense:hearsWho ?Persona}
+UNION
+    {?Device sense:seesWho ?Persona} 
+    
+}
+
+# Threaten Behaviour and Action
+CONSTRUCT{
+    ?Persona privacy:threatens privacy:BehaviourAndActionPrivacy
+}
+WHERE{
+    ?Device sense:deviceUser ?UID . 
+    ?Persona privacy:personaID ?UID .
+    ?Device sense:seesWho ?Persona .
+    ?Device sense:seesWhat ?Persona .
+    }          
+
+# Threaten Personal privacy
+CONSTRUCT{
+    ?Persona privacy:threatens privacy:PersonalPrivacy
+}
+WHERE{
+    ?Device sense:deviceUser ?UID . 
+    ?Persona privacy:personaID ?UID .
+    ?Device sense:seesWho ?Persona .
+    ?Device sense:hearsWho ?Persona}
+
+#Threaten Data and Image
+
+    #Skiiiiiiped
+
+# Threaten Thoughts and Feelings
+CONSTRUCT{
+    ?Persona privacy:threatens privacy:ThoughtAndFeelingPrivacy
+}
+WHERE{
+    ?Device sense:deviceUser ?UID . 
+    ?Persona privacy:personaID ?UID .
+    ?Device sense:seesWhat ?Persona .
+    ?Device sense:hearsWhat ?Persona .
+    
+    {?Device sense:seesWho ?Persona} 
+UNION
+    {?Device sense:seesWhy ?Persona}
+UNION
+    {?Device sense:hearsWho ?Persona}
+UNION    
+    {?Device sense:hearsWhy ?Persona}
+}     
+    
+
+# Threaten Location and space
+
+CONSTRUCT{
+    ?Persona privacy:threatens privacy:LocationAndSpacePrivacy
+}
+WHERE{
+    ?Device sense:deviceUser ?UID . 
+    ?Persona privacy:personaID ?UID .
+    ?Device sense:occursWhen ?Persona .
+    ?Device sense:locatesWhere ?Persona .
+    {?Device sense:seesWho ?Persona}
+UNION
+    {?Device sense:hearsWho ?Persona}
+}
+
