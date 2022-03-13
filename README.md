@@ -1,5 +1,13 @@
-# IoT-Privacy
-MSC8001 Research Project
+# The Privacy Impact Assessment Nexus Ontology (PIANO)
+MSC8001/MSC8002 Research Project
+Kent O'Sullivan
+
+## System Setup: 
+- Download Anaconda
+- Use the YAML file inclded here to build the appropriate virtual environment. 
+- Download Stardog
+- Install stardog to listen on the default port and use the default credentials
+- Interact with Stardog using the Stardog Studio Web Interface (n.b. you may need to select the appropriate databases)
 
 The File privacy.ttl is an RDF Turtle syntax file that defines the privacy namespace. 
 The privacy namespace consists of two key entity groups: PrivacyTypes and Interrogatives. 
