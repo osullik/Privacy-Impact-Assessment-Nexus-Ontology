@@ -9,8 +9,17 @@ Kent O'Sullivan
 - Install stardog to listen on the default port and use the default credentials
 - Interact with Stardog using the Stardog Studio Web Interface (n.b. you may need to select the appropriate databases)
 
-The File privacy.ttl is an RDF Turtle syntax file that defines the privacy namespace. 
-The privacy namespace consists of two key entity groups: PrivacyTypes and Interrogatives. 
+## Files and Purposes:
+
+- *.gitignore*: used to prevent unwanted testing files being uploaded to git from the local folders
+- *ConstructionQueries.SPARQL*: Holds SPARQL formatted copies of the constructor queries used for 'learning' within the social_IOT_KB
+- *IOTPrivacy.YAML* holds the anaconda virtual environment needed to execute the python scripts. 
+- *README.MD* This document. 
+- *ImportDevices.py* Holds the python code required to generate the social_IOT_KB. If executed inside the anaconda virtual environment built out of IOTPrivacy.YAML it should execute smoothly. Note: The "Datasets" directory must be kept in the same directory that ImportDevices.py is kept in. 
+- *privacy.ttl* The RDF Turtle File that defines the 'privacy' namespace.
+- *privacyCompetencyQuestions.SPARQL* The SPARQL queries used during the initial building, then testing of the privacy, sense and social_IOT_KB namespaces. CQs are written in natural langauge, then in SPARQL. 
+- *senses.ttl* the RDF Turtle file that defines the "sense" namespace. 
+- *social_IOT_KB* the RDF Turtle file that holds the current instance of the Social IoT Knowledgebase. Note, this file will be overwritten each time that ImportDevices.py is executed. 
 
 ## PRIVACY TYPES
 - These are derived from Finn's 2013 Paper "Seven Types of Privacy"
