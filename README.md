@@ -2,6 +2,8 @@
 MSC8001/MSC8002 Research Project
 Kent O'Sullivan
 
+Video seminar explaining the research project and results is available on YouTube: https://www.youtube.com/watch?v=_LCFuxtUpRk 
+
 ## System Setup: 
 - Download Anaconda
 - Use the YAML file inclded here to build the appropriate virtual environment. 
