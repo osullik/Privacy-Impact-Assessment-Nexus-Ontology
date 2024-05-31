@@ -85,3 +85,14 @@ While there are 18 defined classes of "service" in the dataset, these have been 
 ## Datasets
 
 -The Datasets folder contains data taken from **Marche, Claudio, et al. "How to exploit the Social Internet of Things: Query Generation Model and Device Profiles’ Dataset". Computer Networks (2020): 107248.**. It is available at: https://www.social-iot.org/index.php?p=downloads in its original format. Copies are kept here for data posterity. 
+
+## Citation
+If this work is of use please cite it using: 
+
+    @mastersthesis{Osullivan2022,
+        author = {O'Sullivan, Kent},
+        title = {Development of a Privacy Impact Assessment Ontology for the Internet of Things},
+        publisher = {University of Southern Queensland},
+        url = {https://github.com/osullik/Privacy-Impact-Assessment-Nexus-Ontology/tree/main/papers},
+        year = {2022}
+        }
